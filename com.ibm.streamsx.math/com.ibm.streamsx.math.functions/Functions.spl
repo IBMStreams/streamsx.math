@@ -1,18 +1,25 @@
 namespace com.ibm.streamsx.math.functions;
 
-/*
- * Return the a list containing the log(x) value of each elements of the input list
+/**
+ * Compute natural logarithm of list elements
+ * 
+ * @param x the input list
+ * @return Returns a list containing the natural logarithm (base-e logarithm) of all the elements of x, in the same order.
  */
-public list<float64> logList(list<float64> inputList){
+public list<float64> logList(list<float64> x){
 	mutable list<float64> result=[];
-	for(float64 f in inputList){
+	for(float64 f in x){
 		appendM(result,log(f));
 	}
 	return result;
 }
 
-/*
- * return a list that contains the euclidian distance between input values : (abs(list2[x]-list1[x])
+/**
+ * Compute the euclidian distance of list elements
+ * 
+ * @param list1 input value list 1
+ * @param list2 input value list 2
+ * @return A list that contains the euclidian distance between input values : (abs(list2\[i\]-list1\[i\]))
  */
 public list<float64> euclidianDistance(list<float64> list1,list<float64> list2){
 	mutable list<float64> result=[];
