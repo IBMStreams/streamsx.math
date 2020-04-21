@@ -3,7 +3,13 @@
  xmlns:info="http://www.ibm.com/xmlns/prod/streams/spl/toolkitInfo">
  <info:identity>
    <info:name>com.ibm.streamsx.math</info:name>
-   <info:description></info:description>
+   <info:description>
+   Mathematics and statistics toolkit.
+   
+    **Note:** This toolkit is **not** supported on Red Hat Enterprise Linux Workstation release **6.x**
+    
+    **Note:** This toolkit requires c++11 support.
+   </info:description>
    <info:version>1.0.0</info:version>
    <info:requiredProductVersion>3.0.0</info:requiredProductVersion>
  </info:identity>

@@ -1,0 +1,12 @@
+/**
+This namespace contains definitions for numerical functions from the c++ standard library.
+
+# Complex values
+* arg Phase angle of complex
+* norm Norm of complex
+* conj Complex conjugate
+* polar Complex from polar components
+* proj Complex projection
+ */
+
+namespace com.ibm.streamsx.math.complex;
