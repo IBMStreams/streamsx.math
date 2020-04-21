@@ -1,4 +1,4 @@
-namespace com.ibm.streamsx.functions;
+namespace com.ibm.streamsx.math.functions;
 
 /*
  * Return the a list containing the log(x) value of each elements of the input list
