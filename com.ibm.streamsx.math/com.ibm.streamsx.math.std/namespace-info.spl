@@ -40,6 +40,13 @@ This namespace contains definitions for numerical functions from the c++ standar
 
 # Other functions
 * fma Multiply-add
+
+# Complex values
+* arg Phase angle of complex
+* norm Norm of complex
+* conj Complex conjugate
+* polar Complex from polar components
+* proj Complex projection
  */
 
-namespace com.ibm.streamsx.math.cmath;
+namespace com.ibm.streamsx.math.std;

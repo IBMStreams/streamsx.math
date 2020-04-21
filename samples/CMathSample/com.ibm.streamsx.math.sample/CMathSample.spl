@@ -17,11 +17,11 @@ public composite CMathSample {
 				onProcess: {
 					float64 x = PI() / 2.0l;
 					mutable float64 y = 0.0;
-					y = com.ibm.streamsx.math.cmath::cos(x);
+					y = com.ibm.streamsx.math.std::cos(x);
 					printStringLn("cos(" + (rstring)x + ") = " +(rstring)y);
 					complex32 xc = [PI() / 3.0, PI() / 2.0];
 					mutable complex32 yc = [0.0, 0.0];
-					yc = com.ibm.streamsx.math.cmath::cos(xc);
+					yc = com.ibm.streamsx.math.std::cos(xc);
 					printStringLn("cos(" + (rstring)xc + ") = " +(rstring)yc);
 					
 					printStringLn("End of sample");
