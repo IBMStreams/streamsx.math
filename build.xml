@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+==============================================
+# Licensed Materials - Property of IBM
+# Copyright IBM Corp. 2020
+==============================================
+-->
+<project name="streamsx.math" default="all">
+
+	<!-- check streams installation -->
+	<property environment="env" />
+	<fail unless="env.STREAMS_INSTALL"  message="STREAMS_INSTALL not set."/>
+	<property name="streams.install"    value="${env.STREAMS_INSTALL}"/>
+	<property name="spl-mt"             value="${streams.install}/bin/spl-make-toolkit"/>
+	<property name="spl-md"             value="${env.STREAMS_INSTALL}/bin/spl-make-doc"/>
+	<property name="spl-st"             value="${env.STREAMS_INSTALL}/bin/streamtool"/>
+
+	<property name="toolkit.dir"        value="com.ibm.streamsx.math"/>
+	<property name="impl.dir"           location="${toolkit.dir}/impl" />
+	<!-- Directories for external libs -->
+	<property name="lib.dir"            location="${toolkit.dir}/lib" />
+	<property name="inc.dir"            location="${toolkit.dir}/include"/>
+	<property name="ext.dir"            location="ext"/>
+	<!-- streams studio bin dir / used only on clean target -->
+	<property name="out.dir"            location="${toolkit.dir}/output"/>
+
+	<property name="doc.string"         value="doc"/>
+	<property name="doc.dir"            value="${doc.string}/spldoc"/>
+	<property name="doc.dir.old"        value="${toolkit.dir}/${doc.string}"/>
+	<property name="tktitle"            value="Mathematics and statistics toolkit" />
+	<!-- <property name="tkauthor"           value="github team" /> -->
+
+	<property name="samples.dir"        value="samples"/>
+	<property name="samples.doc.dir"    value="samples/${doc.string}/spldoc"/>
+
+	<property name="test.dir"           location="tests/frameworktests"/>
+
+	<property name="release.dir"        location="releases"/>
+	<property name="release.info.file"  value="${toolkit.dir}/build.info"/>
+
+	<!-- Create the time stamp -->
+	<tstamp/>
+	<!-- get toolkit version -->
+	<xmlproperty file="${toolkit.dir}/info.xml" prefix="tkinfo" keepRoot="no"/>
+	<property name="toolkit.version" value="${tkinfo.info:identity.info:version}"/>
+
+	<target name="init">
+		<echo message="Toolkit Version: ${toolkit.version}"/>
+	</target>
+
+	<target name="all" depends="toolkit,spldoc"
+		description="Build the toolkit index and the doc. This is compatibility target for production">
+	</target>
+	
+	<target name="clean" depends="spldoc-clean,samples-clean,toolkit-clean,releaseinfo-clean"
+		description="Clean up generated toolkit artifacts, spldoc and samples">
+		<delete dir="${out.dir}"/>
+	</target>
+
+	<target name="clean-all" depends="clean,requirements-clean"
+		description="Clean up generated toolkit artifacts, spldoc, samples and remove libraries from toolkit directory">
+	</target>
+
+	<target name="toolkit" depends="requirements"
+		description="Build the toolkit index and all dependencies">
+		<exec executable="${spl-mt}" failonerror="true">
+			<arg value="--directory"/>
+			<arg value="${toolkit.dir}"/>
+			<arg value="-m"/>
+		</exec>
+	</target>
+
+	<target name="toolkit-clean"
+		description="Clean the toolkit index">
+		<exec executable="${spl-mt}">
+			<arg value="--directory"/>
+			<arg value="${toolkit.dir}"/>
+			<arg value="-c"/>
+		</exec>
+	</target>
+
+
+	<target name="requirements" depends="init"
+		description="Build required libraries and copy results into toolkit directory">
+	</target>
+
+	<target name="requirements-clean"
+		description="Remove the required libraries from toolkit directory">
+		<delete dir="${lib.dir}"/>
+		<delete dir="${inc.dir}"/>
+	</target>
+
+	<target name="spldoc" depends="toolkit"
+		description="Generate the toolkit documentation">
+		<echo message="Tookit spldoc to: ${doc.dir}"/>
+		<exec executable="${spl-md}" failonerror="true">
+			<arg value="--include-composite-operator-diagram" />
+			<!-- <arg value="\-\-author" />
+			<arg value="${tkauthor}" /> -->
+			<arg value="--doc-title" />
+			<arg value="${tktitle}" />
+			<arg value="--directory" />
+			<arg value="${toolkit.dir}" />
+			<arg value="--warn-no-comments"/>
+			<arg value="--copy-image-files" />
+			<arg value="--output-directory" />
+			<arg value="${doc.dir}" />
+		</exec>
+	</target>
+	
+	<target name="spldoc-clean"
+		description="Clean the toolkit documentation and samples documentation">
+		<delete dir="${doc.dir}"/>
+		<delete dir="${samples.doc.dir}"/>
+		<delete dir="${doc.dir.old}"/>
+	</target>
+
+	<!-- Targets on samples -->
+	<target name="samples" depends="toolkit"
+		description="Build all samples">
+		<subant genericantfile="${basedir}/build.xml">
+			<target name="build-sample-target"/>
+			<dirset dir="samples" includes="*" excludes="${doc.string}"/>
+		</subant>
+	</target>
+	
+	<target name="samples-clean"
+		description="Clean up all samples index and samples code">
+		<subant genericantfile="${basedir}/build.xml">
+			<target name="clean-sample-target"/>
+			<dirset dir="samples" includes="*" excludes="${doc.string}"/>
+		</subant>
+	</target>
+
+	<target name="samples-toolkit-xml" depends="toolkit">
+		<subant genericantfile="${basedir}/build.xml">
+			<target name="build-sample-toolkit-xml-target"/>
+			<dirset dir="samples" includes="*" excludes="${doc.string}"/>
+		</subant>
+	</target>
+
+	<target name="spldoc-samples" depends="samples-toolkit-xml"
+		description="Generate the spldoc for all samples">
+		<echo message="All samples spldoc to: ${samples.doc.dir}"/>
+		<exec executable="bash" outputproperty="samples.list" failonerror="true">
+			<arg value="-c"/>
+			<arg value="shopt -s nullglob; for x in samples/*/info.xml; do echo -n ${x%/*};  echo -n : ; done"/>
+		</exec>
+		<echo message="All samples to SPLDOC: ${samples.list}"/>
+		<!-- re-enable the target when samples are there. And remove backslashes ! 
+		<exec executable="${spl-md}" failonerror="true">
+			<arg value="\-\-include-composite-operator-diagram"/>
+			<arg value="\-\-author"/>
+			<arg value="${tkauthor}"/>
+			<arg value="\-\-doc-title"/>
+			<arg value="${tktitle} samples"/>
+			<arg value="\-\-toolkit-path"/>
+			<arg value="${samples.list}"/>
+			<arg value="\-\-warn-no-comments"/>
+			<arg value="\-\-check-tags"/>
+			<arg value="\-\-include-source"/>
+			<arg value="\-\-output-directory"/>
+			<arg value="${samples.doc.dir}"/>
+		</exec> -->
+	</target>
+	
+	<target name="build-sample-target">
+		<echo message="Sample to build: ${basedir}"/>
+		<exec executable="make" failonerror="true" dir="${basedir}">
+			<arg value="PWD=${basedir}"/>
+		</exec>
+	</target>
+	
+	<target name="build-sample-toolkit-xml-target">
+		<echo message="Sample to build: ${basedir}"/>
+		<exec executable="${spl-mt}" failonerror="true" dir="${basedir}">
+			<arg value="-i"/>
+			<arg value="${basedir}"/>
+		</exec>
+	</target>
+
+	<target name="clean-sample-target">
+		<echo message="Sample to clean: ${basedir}"/>
+		<exec executable="make" failonerror="true" dir="${basedir}">
+			<arg value="clean" />
+			<arg value="PWD=${basedir}"/>
+		</exec>
+	</target>
+
+	<!-- Test targets -->
+	<target name="test" depends="toolkit"
+		description="Execute the toolkit test. Requires an up to date toolkit build">
+		<echo message="Start full test"/>
+		<exec executable="./runTest.sh" dir="${test.dir}" failonerror="true">
+			<arg value="--noprompt"/>
+			<arg value="--no-browser"/>
+		</exec>
+	</target>
+
+	<target name="test-quick" depends="toolkit"
+		description="Execute the toolkit quick test. Requires an up to date toolkit build">
+		<echo message="Start quick test"/>
+		<exec executable="./runTest.sh" dir="${test.dir}" failonerror="true">
+			<arg value="--noprompt"/>
+			<arg value="--no-browser"/>
+			<arg value="--category"/>
+			<arg value="quick"/>
+		</exec>
+	</target>
+
+	<!-- Targets to build releases -->
+	<target name="release" depends="clean-all"
+		description="Make a toolkit release archive - purge workspace except downloaded libs and build toolkit from scratch">
+		<antcall target="release-target" inheritAll="true"/>
+	</target>
+	
+	<target name="release-target" depends="releaseinfo">
+		<antcall target="spldoc"/>
+		<antcall target="spldoc-samples"/>
+		<antcall target="samples-clean"/>
+		<mkdir dir="${release.dir}"/>
+		<!-- Extract the short git commit hash -->
+		<exec executable="git" outputproperty="commithash">
+			<arg value="rev-parse" />
+			<arg value="--short" />
+			<arg value="HEAD" />
+		</exec>
+		<property name="releasefilename" value="${release.dir}/${ant.project.name}-${toolkit.version}-${commithash}-${DSTAMP}-${TSTAMP}.tgz"/>
+		<echo message="Make releasefile Toolkit Version: ${toolkit.version} ${commithash} : ${releasefilename}"/>
+		<!-- must use the tar command because the tar target handles symbolic links incorrect -->
+		<exec executable="tar" failonerror="true">
+			<arg value="czf"/>
+			<arg value="${releasefilename}"/>
+			<arg value="--exclude=**/.toolkitList"/>
+			<arg value="--exclude=**/.git*"/>
+			<arg value="--exclude=**/.apt_generated"/>
+			<arg value="--exclude=${toolkit.dir}/.settings"/>
+			<arg value="--exclude=${toolkit.dir}/**/.theFileNameList"/>
+			<arg value="--exclude=${toolkit.dir}/.externalToolBuilders"/>
+			<arg value="--exclude=${toolkit.dir}/.project"/>
+			<arg value="--exclude=${toolkit.dir}/.classpath"/>
+			<arg value="--exclude=${toolkit.dir}/build.xml"/>
+			<arg value="--exclude=${toolkit.dir}/pom.xml"/>
+			<arg value="--exclude=${toolkit.dir}/.cproject"/>
+			<arg value="--exclude=${toolkit.dir}/impl/java/*"/>
+			<arg value="${toolkit.dir}/"/>
+			<arg value="${samples.dir}/"/>
+			<arg value="${doc.string}/"/>
+			<arg value="README.md"/>
+			<arg value="LICENSE"/>
+		</exec>
+		<checksum file="${releasefilename}"/>
+		<checksum algorithm="sha1" file="${releasefilename}"/>
+	</target>
+	
+	<!-- Extract the git commit hash and make release info file -->
+	<target name="releaseinfo" depends="clean-ignored">
+		<exec executable="git" outputproperty="commithash.long" failonerror="true">
+			<arg value="rev-parse" />
+			<arg value="HEAD" />
+		</exec>
+		<exec executable="bash" outputproperty="streamsversion" failonerror="true">
+			<arg value="-c"/>
+			<arg value="${spl-st} version | grep Version="/>
+		</exec>
+		<exec executable="bash" failonerror="true">
+			<arg value="-c" />
+			<arg value="echo -e &quot;commit_hash=${commithash.long}\nos=${os.version}\nStreams_${streamsversion}&quot; > ${release.info.file}"/>
+		</exec>
+		<echo message="Generated release info file ${release.info.file}"/>
+		<exec executable="bash" failonerror="true">
+			<arg value="-c" />
+			<arg value="cat ${release.info.file}" />
+		</exec>
+	</target>
+
+	<target name="releaseinfo-clean">
+		<delete file="${release.info.file}"/>
+	</target>
+	
+	<!--- Targets to purge the workspace before a release archive is produced -->
+	<target name="clean-ignored" depends="warn-unclean">
+	</target>
+	
+	<target name="warn-unclean" depends="check-unclean" if="has.uncommited">
+		<echo>!Your workspace is not clean!</echo>
+		<echo>Commit all changes before you produce a release</echo>
+		<echo>commitstatus:</echo>
+		<echo>${commitstatus}</echo>
+		<input>Press Return key to continue or ^C to exit...</input>
+	</target>
+
+	<target name="check-unclean" depends="warn-untracked">
+		<exec executable="git" outputproperty="commitstatus">
+			<arg value="status" />
+			<arg value="--porcelain" />
+		</exec>
+		<!-- set condition true if there are any non-whitespaces -->
+		<condition property="has.uncommited">
+			<matches string="${commitstatus}" pattern="\S" multiline="true"/>
+		</condition>
+		<echo message="has.uncommited=${has.uncommited}"/>
+	</target>
+
+	<target name="warn-untracked" depends="check-untracked" if="has.untracked">
+		<echo>!!! DANGER: Git-ignored or untracked files to be removed from your workspace:</echo>
+		<echo>${untracked}</echo>
+		<input>Press Return key to continue or ^C to exit...</input>
+		<exec executable="git" failonerror="true">
+			<arg value="clean"/>
+			<arg value="--force"/>
+			<arg value="-d"/>
+			<arg value="-x"/>
+			<arg value="--"/>
+			<arg value="${toolkit.dir}"/>
+			<arg value="${samples.dir}"/>
+			<arg value="${doc.string}"/> <!-- use a value here because git clean fails is this is an location and is empty -->
+		</exec>
+	</target>
+
+	<target name="check-untracked">
+		<exec executable="git" outputproperty="untracked" failonerror="true">
+			<arg value="clean"/>
+			<arg value="--dry-run"/>
+			<arg value="-d"/>
+			<!-- do no clean up for all studio files which are excluded from the release package -->
+			<arg value="--exclude=${toolkit.dir}/.settings"/>
+			<arg value="--exclude=${toolkit.dir}/.externalToolBuilders"/>
+			<arg value="--exclude=**/.apt_generated"/>
+			<arg value="--exclude=**/.toolkitList"/>
+			<arg value="-x"/>
+			<arg value="--"/>
+			<arg value="${toolkit.dir}"/>
+			<arg value="${samples.dir}"/>
+			<arg value="${doc.string}"/> <!-- use a value here because git clean fails is this is an location and is empty -->
+		</exec>
+		<!-- set condition true if there are any non-whitespaces -->
+		<condition property="has.untracked">
+			<matches string="${untracked}" pattern="\S" multiline="true"/>
+		</condition>
+		<echo message="has.untracked=${has.untracked}"/>
+	</target>
+
+</project>

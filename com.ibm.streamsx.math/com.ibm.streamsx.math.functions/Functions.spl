@@ -1,0 +1,37 @@
+namespace com.ibm.streamsx.math.functions;
+
+/**
+ * Compute natural logarithm of list elements
+ * 
+ * @param x the input list
+ * @return Returns a list containing the natural logarithm (base-e logarithm) of all the elements of x, in the same order.
+ */
+public list<float64> logList(list<float64> x){
+	mutable list<float64> result=[];
+	for(float64 f in x){
+		appendM(result,log(f));
+	}
+	return result;
+}
+
+/**
+ * Compute the euclidian distance of list elements
+ * 
+ * @param list1 input value list 1
+ * @param list2 input value list 2
+ * @return A list that contains the euclidian distance between input values : (abs(list2\[i\]-list1\[i\]))
+ */
+public list<float64> euclidianDistance(list<float64> list1,list<float64> list2){
+	mutable list<float64> result=[];
+	int32 sz=size(list1)>=size(list2)?size(list2):size(list1);
+	mutable int32 index=0;
+	mutable float64 val;
+	while(index < sz){
+		val=abs(list2[index]-list1[index]);
+		if(!isNaN(val)){
+			appendM(result,val);
+		}
+		index++;
+	}
+	return result;
+}
