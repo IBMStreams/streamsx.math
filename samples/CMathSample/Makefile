@@ -2,7 +2,7 @@
 # others. All Rights Reserved.
 .PHONY: build all distributed clean
 
-STREAMS_MATH_TOOLKIT ?= $(PWD)/../../com.ibm.streamsx.math
+STREAMSX_MATH_TOOLKIT ?= $(PWD)/../../com.ibm.streamsx.math
 
 ifeq ($(STREAMS_STUDIO_BUILDING), 1)
     $(info Building from Streams Studio, use env vars set by studio)
@@ -18,7 +18,7 @@ else
     SPLC = $(STREAMS_INSTALL)/bin/sc
     DATA_DIR = data
     OUTPUT_DIR = output
-    TOOLKIT_PATH = $(STREAMS_MATH_TOOLKIT)
+    TOOLKIT_PATH = $(STREAMSX_MATH_TOOLKIT)
 endif
 
 SPL_MAIN_COMPOSITE = com.ibm.streamsx.math.sample::CMathSample
