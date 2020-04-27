@@ -1,0 +1,74 @@
+public composite StdFuncComplex {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<*32>float32 pi = PI();
+					//<*64>float64 pi = PI();
+					//<*32>complex32 pi12 = [pi / 2.0w, 0.0w];
+					//<*64>complex64 pi12 = [pi / 2.0l, 0.0l];
+					//<*32>complex32 pi16 = [pi / 6.0w, 0.0w];
+					//<*64>complex64 pi16 = [pi / 6.0l, 0.0l];
+					//<*32>complex32 pi14 = [pi / 4.0w, 0.0w];
+					//<*64>complex64 pi14 = [pi / 4.0l, 0.0l];
+					//<*32>complex32 pi13 = [pi / 3.0w, 0.0w];
+					//<*64>complex64 pi13 = [pi / 3.0l, 0.0l];
+					//<*32>complex32 one = [1.0w, 0.0w];
+					//<*64>complex64 one = [1.0l, 0.0l];
+					//<*32>complex32 one05 = [0.5w, 0.0w];
+					//<*64>complex64 one05 = [0.5l, 0.0l];
+					
+					//<*32>mutable complex32 y = [0.0w, 0.0w];
+					//<*64>mutable complex64 y = [0.0l, 0.0l];
+					//<*32>mutable complex32 x = [0.0w, 0.0w];
+					//<*64>mutable complex64 x = [0.0l, 0.0l];
+					//<cos_*>x = pi13; y = com.ibm.streamsx.math.std::cos(x);
+					//<sin_*>x = pi16; y = com.ibm.streamsx.math.std::sin(x);
+					//<tan_*>x = pi14; y = com.ibm.streamsx.math.std::tan(x);
+					//<acos_*>x = one05; y = com.ibm.streamsx.math.std::acos(x);
+					//<asin_*>x = one05; y = com.ibm.streamsx.math.std::asin(x);
+					//<atan_*>x = one; y = com.ibm.streamsx.math.std::atan(x);
+					//<sinh_*>x = one; y = com.ibm.streamsx.math.std::sinh(x);
+					//<cosh_*>x = one; y = com.ibm.streamsx.math.std::cosh(x);
+					//<tanh_*>x = one; y = com.ibm.streamsx.math.std::tanh(x);
+					//<asinh_*>x = one; y = com.ibm.streamsx.math.std::asinh(x);
+					//<acosh_*>x = one; y = com.ibm.streamsx.math.std::acosh(x);
+					//<atanh_*>x = one05; y = com.ibm.streamsx.math.std::atanh(x);
+					
+					complex64 y64 = y;
+					//<cos_* sin_*>complex64 expec = one05;
+					//<tan_*>complex64 expec = one;
+					//<acos_*>complex64 expec = pi13;
+					//<asin_*>complex64 expec = pi16;
+					//<atan_* atan2_*>complex64 expec = pi14;
+					//<sinh_*>complex64 expec = [1.175201194l, 0.0l];
+					//<cosh_*>complex64 expec = [1.543080635l, 0.0l];
+					//<tanh_*>complex64 expec = [0.761594156l, 0.0l];
+					//<asinh_*>complex64 expec = [0.881373587l, 0.0l];
+					//<acosh_*>complex64 expec = [0.0l, 0.0l];
+					//<atanh_*>complex64 expec = [0.549306144l, 0.0l];
+					float64 diff = real(y64) - real(expec);
+					float64 diffi = imag(y64) - imag(expec);
+					
+					rstring func =
+					//<cos_*>"cos";
+					//<sin_*>"sin";
+					//<tan_*>"tan";
+					//<acos_*>"acos";
+					//<asin_*>"asin";
+					//<atan_*>"atan";
+					//<sinh_*>"sinh";
+					//<cosh_*>"cosh";
+					//<tanh_*>"tanh";
+					//<asinh_*>"asinh";
+					//<acosh_*>"acosh";
+					//<atanh_*>"atanh";
+					printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " diff=" + (rstring)diff + " diffi=" + (rstring)diffi);
+					if (abs(diff) > 0.00001l) abort();
+					if (abs(diffi) > 0.00001l) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}
