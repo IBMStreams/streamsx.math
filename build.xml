@@ -52,7 +52,7 @@
 		description="Build the toolkit index and the doc. This is compatibility target for production">
 	</target>
 	
-	<target name="clean" depends="spldoc-clean,samples-clean,toolkit-clean,releaseinfo-clean"
+	<target name="clean" depends="spldoc-clean,samples-clean,cpp-clean,toolkit-clean,releaseinfo-clean"
 		description="Clean up generated toolkit artifacts, spldoc and samples">
 		<delete dir="${out.dir}"/>
 	</target>
@@ -61,7 +61,7 @@
 		description="Clean up generated toolkit artifacts, spldoc, samples and remove libraries from toolkit directory">
 	</target>
 
-	<target name="toolkit" depends="requirements"
+	<target name="toolkit" depends="cpp"
 		description="Build the toolkit index and all dependencies">
 		<exec executable="${spl-mt}" failonerror="true">
 			<arg value="--directory"/>
@@ -90,6 +90,18 @@
 		<delete dir="${inc.dir}"/>
 	</target>
 
+	<target name="cpp" depends="requirements"
+		description="Build the cpp library">
+		<exec executable="make" dir="${impl.dir}"/>
+	</target>
+	
+	<target name="cpp-clean" depends="requirements"
+		description="Clean up the cpp library">
+		<exec executable="make" dir="${impl.dir}">
+			<arg value="clean"/>
+		</exec>
+	</target>
+	
 	<target name="spldoc" depends="toolkit"
 		description="Generate the toolkit documentation">
 		<echo message="Tookit spldoc to: ${doc.dir}"/>

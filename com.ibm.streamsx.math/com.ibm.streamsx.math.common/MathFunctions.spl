@@ -1,0 +1,1958 @@
+//#############################################################################
+//#
+//#  (c) 2018-2020 IBM D R&D GmbH
+//#      All Rights Reserved
+//#      Author: Thomas Neumann
+//#
+//#    VERSION:      1.00.00 2020/APR/23"
+//#    Datum:        23.04.2020
+//#    Editor:       thn
+//#    Reason:       initial version, provided functions:
+//#                    uint64ToHexString() - 2x
+//#                    uint8ListToHexString()
+//#                    rstringListToUint8List()
+//#                    convertUint8ListToUint64()
+//#                    convertUint8ListToFloat64()
+//#                    berOidToUint8List()
+//#                    mapFromInt32ToFloat64()
+//#                    mapFromUint32ToFloat64()
+//#                    mapFromInt16ToFloat64()
+//#                    mapFromUint16ToFloat64
+//#                    atan2()
+//#                    isMatrixDimensionValid()
+//#                    multiplyMatrices()
+//#                    scalarProduct()
+//#                    getMatrixDimension()
+//#                    getMatrixRow()
+//#                    getMatrixColumn()
+//#                    transposeMatrix()
+//#
+//#############################################################################
+
+namespace com.ibm.streamsx.math.common;
+
+// ################################################################################################################################################################################
+
+/**
+ * This function converts an unsigned integer value into a hexadecimal string representation
+ * various pretty printing parameters allow to format the output as desired
+ * fillToBytes will override fillNibble to true
+ * @param int uint64 value to be converted
+ * @param fillNibble if true, insert a leading filler "0" in case the number of hex digits is odd
+ * @param fillToBytes if the number of hex bytes is less than fillToBytes, insert leading filler bytes "00" as needed
+ * @param prefix string prefix to precede the hex bytes (may be empty)
+ * @param byteSeparator string to be inserted between any two hex bytes (if more than one at all)
+ * @return uint64ToHexString hexadecimal string representation of received unsigned integer value
+ */
+public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBytes, rstring prefix, rstring byteSeparator )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_UINT64TOHEXSTRING";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** int:           " + (rstring)int );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** fillNibble:    " + (rstring)fillNibble );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** fillToBytes:   " + (rstring)fillToBytes );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** prefix:        " + (rstring)prefix );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** byteSeparator: " + (rstring)byteSeparator );
+	}
+
+	uint64 MASK = 15ul;	// 0xf
+	map<uint64, rstring> HEXCODE =	{
+										15ul:"F", 14ul:"E", 13ul:"D", 12ul:"C",
+										11ul:"B", 10ul:"A",  9ul:"9",  8ul:"8",
+										 7ul:"7",  6ul:"6",  5ul:"5",  4ul:"4",
+										 3ul:"3",  2ul:"2",  1ul:"1",  0ul:"0"
+									}; 
+
+	mutable rstring _hexString = "";	// buffer to construct the string representing the uint64 input "int"	
+	mutable uint64 _x = int;			// working copy of the input to convert (will be modified by shifting)
+	mutable uint8 _i = 0ub;				// index, counting nibbles processed so far
+	mutable uint8 _ftn = 0ub;			// max nibble count, up to which the string must be filled with "0" in case fillToBytes > 0ub.
+
+	if( 8ub < fillToBytes )
+	{
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** fillToBytes: " + (rstring)fillToBytes + " out of range [0..8], assuming 8!" );
+		_ftn = 16ub;					// 2ub * fillToBytes with fillToBytes = 8ub
+	}
+	else
+	{
+		_ftn = 2ub * fillToBytes;
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _ftn: " + (rstring)_ftn );
+
+	while( _i < 1ub || ( _i < 16ub && _x > 0ul ) )
+	{
+		if ( isTraceable( Trace.trace ) )
+		{
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _x:         " + (rstring)_x );
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _hexString: " + (rstring)_hexString );
+		}
+		
+		if( 0ub < _i && ( ( _i % 2ub ) == 0ub ) && byteSeparator != "" )
+		{
+			_hexString = byteSeparator + _hexString;
+		}
+		
+		_hexString = (rstring)( HEXCODE[ _x & MASK ] ) + _hexString;
+		_x >>= 4;
+		_i++;
+
+		if ( isTraceable( Trace.trace ) )
+		{
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _hexString: " + (rstring)_hexString );
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _x:         " + (rstring)_x );
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
+		}
+	}
+	
+	// in case fillNibble is true OR fillToBytes is greater than 0:
+	// add filler if length of the string is not even
+	if( ( fillNibble || ( 0ub < _ftn ) ) && ( ( _i % 2ub ) != 0ub ) )
+	{
+		_hexString = "0" + _hexString;
+		_i++;
+
+		if ( isTraceable( Trace.trace ) )
+		{
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** nibble filler inserted" );
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
+		}
+	}
+	
+	while( _i < _ftn )
+	{
+		if ( isTraceable( Trace.trace ) )
+		{
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _ftn: " + (rstring)_ftn );
+		}
+
+		if( 0ub < _i && ( ( _i % 2ub ) == 0ub ) && byteSeparator != "" )
+		{
+			_hexString = byteSeparator + _hexString;
+		}
+
+		_hexString = "0" + _hexString;
+		_i++;
+
+		if ( isTraceable( Trace.trace ) )
+		{
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _ftn: " + (rstring)_ftn );
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
+		}
+	}
+	
+	_hexString = prefix + _hexString;
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, _hexString = " + (rstring)_hexString );
+	return _hexString;
+}
+// ### \uint64ToHexString ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function converts an unsigned integer value into a hexadecimal string representation
+ * It is a wrapper for the extended version of the same function, using default values
+ * for the various pretty printing options
+ * If pretty printing options are required to be set different, use the extended version directly
+ * @param int uint64 value to be converted
+ * @return uint64ToHexString hexadecimal string representation of received unsigned integer value
+ */
+public rstring uint64ToHexString( uint64 int )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_UINT64TOHEXSTRING";
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** using default values for extended printing options" );
+
+	return uint64ToHexString( int, true, 0ub, "", " " );
+}
+// ### \uint64ToHexString ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function converts a list of unsigned integer values, i.e. a byte list,
+ * into a formatted hexadecimal string representation
+ * It is a wrapper for the extended version of the same function, using default values
+ * for the various pretty printing options
+ * If pretty printing options are required to be set different, use the extended version directly
+ * @param byteList list<uint8> value to be converted
+ * @param byteSeparator the byte separator
+ * @return uint8ListToHexString hexadecimal string representation of received unsigned integer value
+ */
+public rstring uint8ListToHexString( list<uint8> byteList, rstring byteSeparator )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_UINT8LISTTOHEXSTRING";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** byteList:      " + (rstring)byteList );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** byteSeparator: " + (rstring)byteSeparator );
+	}
+
+	mutable rstring _hexString = "";	// buffer to construct the string representing the list<uint8> input in "byteList"
+
+	for( uint8 byte in byteList )
+	{
+		_hexString = _hexString + uint64ToHexString( (uint64)byte ) + byteSeparator;
+	}
+	_hexString = rtrim( _hexString, byteSeparator );
+
+	return _hexString;
+}
+// ### \uint8ListToHexString ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function converts a list of rstring values into a list of uint8 values
+ * If one or more of the rstring values cannot be converted to uint8 values, the complete list will be empty
+ * @param stringValues list of rstring values to be converted
+ * @return rstringListToUint8List list of uint8 representation of received rstring values
+ */
+public list<uint8> rstringListToUint8List( list<rstring> stringValues )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_RSTRINGLISTTOUINT8LIST";
+
+	mutable list<uint8> _ret = [];
+
+	mutable boolean ret = false;
+	for( rstring _s in stringValues )
+	{
+		mutable float64 out = 0.0;
+		ret = convertToFloat64(	_s,
+								true,				// strict parsing
+								false,				// allow empty
+								0.0,				// default
+								0.0,				// min
+								255.0,				// max
+								out );
+		
+		if( ret == true )
+		{
+			appendM( _ret, (uint8)out );
+		}
+		else
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** cannot convert _s = " + (rstring)_s );
+			clearM( _ret );
+			break;
+		}
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, _ret = " + (rstring)_ret );
+	return _ret;
+}
+// ### \rstringListToUint8List ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function converts a sequence of up to 8 uint8 values into an uint64 integer value.
+ * If strictParsing is set to true, the sequence must be in a list with exactly eight uint8 values.
+ * If strictParsing is set to false, the list may contain more or less than 8 elements.
+ * In case it contains more than 8, a sequence of length elements from the beginning or from the end
+ * of the list will be used, depending on where the least significant byte can be found as specified
+ * by lsbIsRhs.
+ * If lsbIsRhs, the least significant byte will be the one with the highest index in the list,
+ * otherwise it will be the one with the lowest index, i.e. 0
+ * In case the list contains less than eight elements, missing bytes will be filled up with 00 from
+ * the side representing the highest significant byte.
+ * @param uint8InValues list containing the sequence of uint8 values to be converted
+ * @param strictParsing if set to true, the size of uint8InValues must be 8, exactly, and legth will be ignored
+ * @param length if strictParsing is set to true, the length of the sequence of bytes may be specified between 1 and 8
+ * @param lsbIsRhs if set to true, the least significant byte is the one with the highest index in the list, otherwise the one with index 0
+ * @param uint64OutValue out paramter, containing an uint64 representation of the sequence of uint8 values received in uint8InValues
+ * @return true, if the conversion was successful and uint64OutValue is valid (false otherwise)
+ */
+public boolean convertUint8ListToUint64(	list<uint8>		uint8InValues,
+											boolean			strictParsing,
+											int32			length,
+											boolean			lsbIsRhs,
+											mutable uint64	uint64OutValue )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_CONVERTUINT8LISTTOUINT64";
+
+	mutable boolean ret = false;
+
+	list<uint64> _factor = [  1ul,          256ul,                65536ul,                16777216ul,
+							  4294967296ul, 4294967296ul * 256ul, 4294967296ul * 65536ul, 4294967296ul * 16777216ul ];
+
+	mutable uint64 _uint64OutValue = 0ul;
+	
+	mutable int32 _size = size( uint8InValues );
+	mutable int32 _length = 8;
+	
+	mutable int32 _idx = 0;
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint8InValues = " + (rstring)uint8InValues );
+	
+	if( true == strictParsing )
+	{
+		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing );
+		if( 8 == _size )
+		{
+			ret = true;
+		}
+	}
+	else
+	{
+		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing );
+		if( ( 0 < length ) && ( 8 >= length ) )
+		{
+			_length = ( length > _size ? _size : length );
+			ret = true;
+		}
+	}
+	
+	if( ret )
+	{
+		if( lsbIsRhs )
+		{
+			while( _idx < _length )
+			{
+				_uint64OutValue += _factor[_idx] * (uint64)uint8InValues[_length - 1 - _idx];
+				_idx++;
+			}
+		}
+		else
+		{
+			while( _idx < _length )
+			{
+				_uint64OutValue += _factor[_idx] * (uint64)uint8InValues[_idx];
+				_idx++;
+			}
+		}
+
+		swap( uint64OutValue, _uint64OutValue ); 
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \convertUint8ListToUint64 ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function converts a sequence of 4 or 8 uint8 values into a IEEE-754 floating point value and maps it to an SPL::Float64.
+ * If length does not match the size of uint8InValues and/or is different from 4 or 8, false will be returned
+ * and float64OutValue remains unchanged.
+ * If length is 4, the conversion will consider a type float as target, if length is 8, a type doulbe as target will be assumed.
+ * In both cases the output will be casted into a SPL::Float64 value at the end. 
+ * @param uint8InValues list containing the sequence of uint8 values to be converted
+ * @param length if set to 4, size of uint8InValues must be four bytes, if set to 8, size of uint8InValues must be eigth bytes 
+ * @param float64OutValue out paramter, containing a IEEE-754 floating point representation (float or double) of the sequence of uint8 values received in uint8InValues
+ * @return true, if the conversion was successful and float64OutValue is valid (false otherwise)
+ */
+public boolean convertUint8ListToFloat64(			list<uint8>		uint8InValues,
+													int32			length,
+											mutable float64			float64OutValue )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_CONVERTUINT8LISTTOFLOAT64";
+
+	mutable boolean ret = false;
+
+
+	mutable float64 _float64OutValue = 0.0fl;
+	
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint8InValues = " + (rstring)uint8InValues );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received length =        " + (rstring)length );
+	}
+
+	if( 4 == length )
+	{	// conversion to float assumed
+		if( length == size( uint8InValues ) )
+		{
+			_float64OutValue = (float64)uint8ListToFloat32( uint8InValues );
+			ret = true;
+		}
+		else
+		{	// inconsistent length specified
+				appTrc( Trace.error, FUNCTION_NAME + ": *** inconsistent length =        " + (rstring)length );
+				ret = false;	// set per default, but needed to avoid empty else
+		}
+	}
+	else
+	{
+		if( 8 == length )
+		{	// conversion to doulbe assumed
+			if( length == size( uint8InValues ) )
+			{
+				_float64OutValue = uint8ListToFloat64( uint8InValues );
+				ret = true;
+			}
+			else
+			{	// inconsistent length specified
+				appTrc( Trace.error, FUNCTION_NAME + ": *** inconsistent length =        " + (rstring)length );
+				ret = false;	// set per default, but needed to avoid empty else
+			}
+		}
+		else
+		{	// invalid length at all ...
+			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid length =        " + (rstring)length );
+			ret = false;	// set per default, but needed to avoid empty else
+		}
+	}
+
+	if( ret )
+	{
+		swap( float64OutValue, _float64OutValue );
+	}
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \convertUint8ListToFloat64 ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function decodes a sequence of BER-OID encoded bytes and stores the decoded values into a list of uint8.
+ * @param berOidInValues uint8 list containing the BER-OID encoded sequence of bytes to be converted 
+ * @param strictParsing if set to true, berOidInValues\[0\] must not be 0x80 and the list must not be empty. 
+ *  otherwise parsing will occur starting with berOidInValues\[0\], if present, and spare bytes will be ignored. 
+ * @param uint8OutValues out paramter, containing a list of uint8 representation of the values received in berOidInValues 
+ * @return true, if the conversion was successful and uint8OutValues is valid (false otherwise)   
+ */
+public boolean berOidToUint8List(	list<uint8>			berOidInValues,
+									boolean				strictParsing,
+									mutable list<uint8>	uint8OutValues )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_BEROIDTOUINT8LIST";
+	
+	// const (lookup tables)
+			list<uint8>	CURR_MASKING = 	[
+											0x7Fu,	// 0111 1111
+											0x7Eu,	// 0111 1110
+											0x7Cu,	// 0111 1100
+											0x78u,	// 0111 1000
+											0x70u,	// 0111 0000
+											0x60u,	// 0110 0000
+											0x40u,	// 0100 0000
+											0x00u	// 0000 0000
+										];
+
+			list<uint8>	PREV_MASKING = 	[
+											0x00u,	// 0000 0000
+											0x01u,	// 0000 0001
+											0x03u,	// 0000 0011
+											0x07u,	// 0000 0111
+											0x0Fu,	// 0000 1111
+											0x1Fu,	// 0001 1111
+											0x3Fu,	// 0011 1111
+											0x7Fu	// 0111 1111
+										];
+
+	// vars
+	mutable boolean		ret = false;
+	
+	mutable uint8		_byte = 0x00u;
+	mutable uint8		_cB = 0x00u;
+	mutable uint8		_pB = 0x00u;
+	
+	mutable list<uint8>	_buffer = (list<uint8>)[];
+	mutable list<uint8>	_uint8OutValues = (list<uint8>)[];
+
+	mutable boolean		_isValid = true;	
+
+	mutable int32		_size = size( berOidInValues );
+	mutable int32		_length = 0;		// length of the 8-bit list
+	
+	mutable int32		_idx = 0;
+	mutable int32		_idx7 = 0;
+	mutable int32		_bitCounter = 0;
+	
+	
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received berOidInValues = " + (rstring)berOidInValues );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received strictParsing = " + (rstring)strictParsing );
+	}
+
+	// check, if the received list is not empty
+	// we have to do this to be stable, regardless of strictParsing
+	if( 1 > _size )
+	{	// the list must contain at least one byte
+		appTrc( Trace.error, FUNCTION_NAME + ": *** _size = " + (rstring)_size );
+		_isValid = false;
+	}
+
+
+	if( _isValid && strictParsing )
+	{
+		// we can be sure, berOidInValues[0] exists (checked above)
+		// so check, if the first byte is not 0x80 (leading 0 is not allowed)
+		if( 0x80u == berOidInValues[0] )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing + " but berOidInValues[0] = " + (rstring)berOidInValues[0] );
+			_isValid = false;
+		}
+	}
+
+
+	// prepare _buffer with 7-bit value bytes (bit 8 always cleared)
+	if( _isValid )
+	{
+		while( ( _idx < _size ) && ( _idx == _length ) )
+		{
+			_byte = berOidInValues[_idx];
+			
+			if( 0x80u == ( 0x80u & _byte ) )
+			{
+				// clear bit 8 of _byte and push into _buffer 
+				appendM( _buffer, 0x7Fu & _byte );
+				_length++;
+				_idx++;		// bit 8 is set, so more bytes must follow
+			}
+			else
+			{
+				// bit 8 is not set so we can push _byte directly into _buffer
+				appendM( _buffer, _byte );
+				_length++;
+				// this is the last byte, so don't increment _idx!
+			}
+		}
+
+		if( strictParsing )
+		{
+			// check, if the number of bytes pushed into _buffer is equal to size( berOidInValues )
+			if( _length != _size )
+			{	// in case of strictParsing, the list must not contain spare bytes
+				appTrc( Trace.error, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing + " but spare bytes detected" );
+				if ( isTraceable( Trace.trace ) )
+				{
+					appTrc( Trace.trace, FUNCTION_NAME + ": *** _size = " + (rstring)_size );
+					appTrc( Trace.trace, FUNCTION_NAME + ": *** _length = " + (rstring)_length );
+				}
+				_isValid = false;
+			}
+		}		
+	} // _isValid
+
+	
+	// compact 7-bit values in _buffer into _uint8OutValues
+	if( _isValid )
+	{	 
+		_idx = 0;
+		_idx7 = 0;
+		_bitCounter = 0;
+		for( int32 i in range( _length, 0, -1 ) )
+		{
+			_idx = i - 1;
+			
+			if( 0 == _bitCounter )
+			{
+				_cB = ( _buffer[_idx] & CURR_MASKING[_bitCounter] );
+				appendM( _uint8OutValues, _cB );
+
+				// all 7 bits assigned - nothing to change in previous byte
+
+				// since we appended _cB, we need to increase _idx7
+				_idx7++;
+			}
+			else
+			{
+				if( 7 == _bitCounter )
+				{
+					_pB = ( _buffer[_idx] & PREV_MASKING[_bitCounter] ) << 8 - _bitCounter;
+					_uint8OutValues[_idx7 - 1] += _pB;
+					// all 7 bits assigned by change in previous byte, so nothing to append and _idx7 not to be increased
+				}
+				else
+				{
+					_cB = ( _buffer[_idx] & CURR_MASKING[_bitCounter] ) >> _bitCounter;
+					appendM( _uint8OutValues, _cB );
+					
+					_pB = ( _buffer[_idx] & PREV_MASKING[_bitCounter] ) << 8 - _bitCounter;
+					_uint8OutValues[_idx7 - 1] += _pB;
+
+					// since we appended _cB, we need to increase _idx7
+					_idx7++;
+				}
+			}
+			
+			if( 7 == _bitCounter )
+			{
+				_bitCounter = 0;
+			}
+			else
+			{
+				_bitCounter++;
+			}
+		}
+		
+		// now we have the BER-OID in _uint8OutValues, but unfortunately in the wrong order,
+		// since we always just appended to avoid caring for index translations
+		// so just assign the reverse list to uint8OutValues  
+		
+//		swap( uint8OutValues, _uint8OutValues ); 
+		uint8OutValues = reverse( _uint8OutValues );
+		
+		ret = true;
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \berOidToUint8List ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function maps an int32InValue out of a range between MIN_I and MAX_I to a float64 value
+ * into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a
+ * lat or lon WGS84 coordinate into decimal degrees between -90..+90 or -180..+180 respectively.
+ * If the mapping fails, e.g. since int32InValue is out of range or contained in ERROR_I,
+ * the return value will be false and the content of the mutable out param float64OutValue
+ * will be kept unmodified.
+ * Hint: if the input value has to be converted from a list of uint8 values into an int32 value
+ * first, use the native function common::uint8ListToInt32()
+ * @param int32InValue int32 value containing a value between MIN_I and MAX_I to be mapped
+ * @param MIN_I minimal value of the range of int32 values allowed for int32InValue 
+ * @param MAX_I maximal value of the range of int32 values allowed for int32InValue 
+ * @param ERROR_I list of optional values to be considered as invalid although formally in range 
+ * @param MIN_F minimal value of the range of float64 values int32InValue shall be mapped into 
+ * @param MAX_F maximal value of the range of float64 values int32InValue shall be mapped into 
+ * @param float64OutValue mutable out value, the result of the mapping shall be stored in
+ * @return true, if the mapping was successful and float64OutValue is valid (false otherwise)   
+ */
+public boolean mapFromInt32ToFloat64(			int32			int32InValue,
+												int32			MIN_I,
+												int32			MAX_I,
+												list<int32>		ERROR_I,
+												float64			MIN_F,
+												float64			MAX_F,			
+										mutable float64			float64OutValue )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_MAPFROMINT32TOFLOAT64";
+
+	// ATTENTION:
+	// although int32InValue, as well as MIN_I and MAX_I are of type int32, we need to operate with int64 internally,
+	// using    _xR,                     MIN_R and MAX_R,
+	// since intermediate processing results might be twice the possible range of int32.
+
+	// const:
+	// source range
+			int64	MIN_R = (int64)MIN_I;
+			int64	MAX_R = (int64)MAX_I;
+
+	// vars:
+	// input value
+	mutable int64	_xR = (int64)int32InValue;
+
+	// helpers
+//	mutable int64	R1 = 0w;
+//	mutable int64	R2 = 0w;
+//	mutable float64	D1 = 0.0fw;
+
+	// output value
+	mutable float64	_xD = 0.0fw;
+
+
+	mutable boolean ret = true;
+
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue );
+	
+	// is int32InValue within error-on-purpose list?
+	if( has( ERROR_I, int32InValue ) )
+	{	// int32InValue is within error-on-purpose list
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		ret = false;
+	}
+
+	// is int32InValue out of range (too small)
+	if( ret && ( int32InValue < MIN_I ) )
+	{	// int32InValue is too small
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		ret = false;
+	}
+
+	// is int32InValue out of range (too big)
+	if( ret && ( int32InValue > MAX_I ) )
+	{	// int32InValue is too big
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		ret = false;
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so let's try the mapping...
+//		R1 = _xR - MIN_R;
+//		R2 = MAX_R - MIN_R;
+//		D1 = MAX_F - MIN_F;
+
+//		_xD = MIN_F + ( D1 * ( (float64)( R1 ) / (float64)( R2 ) ) );
+
+		_xD = MIN_F + ( ( MAX_F - MIN_F ) * ( (float64)( _xR - MIN_R ) / (float64)( MAX_R - MIN_R ) ) );
+
+		// ret = true; // still the case...
+	}
+
+	// check range of result
+	if( MIN_F <= MAX_F )
+	{	// regular case of target range limits (e.g. ascending -x ... +x)
+		if( _xD < MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			ret = false;
+		}
+		
+		if( ret && _xD > MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			ret = false;
+		}
+	}
+	else
+	{	// reverse case of target range limits (e.g. descending +x ... -x)
+		if( _xD > MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			ret = false;
+		}
+		
+		if( ret && _xD < MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			ret = false;
+		}
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so put out the mapped value in the out parameter
+		swap( float64OutValue, _xD ); 
+	}
+	else
+	{
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
+		ret = ret;		
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \mapFromInt32ToFloat64 ###
+
+// ################################################################################################################################################################################
+
+/**
+ * This function maps an uint32InValue out of a range between MIN_I and MAX_I to a float64 value
+ * into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a
+ * sensor relative roll angle into decimal degrees between 0..+360.
+ * If the mapping fails, e.g. since uint32InValue is out of range or contained in ERROR_I,
+ * the return value will be false and the content of the mutable out param float64OutValue
+ * will be kept unmodified.
+ * Hint: if the input value has to be converted from a list of uint8 values into an uint32 value
+ * first, use the native function common::uint8ListToUint32()
+ * @param uint32InValue uint32 value containing a value between MIN_I and MAX_I to be mapped
+ * @param MIN_I minimal value of the range of uint32 values allowed for uint32InValue 
+ * @param MAX_I maximal value of the range of uint32 values allowed for uint32InValue 
+ * @param ERROR_I list of optional values to be considered as invalid although formally in range 
+ * @param MIN_F minimal value of the range of float64 values uint32InValue shall be mapped into 
+ * @param MAX_F maximal value of the range of float64 values uint32InValue shall be mapped into 
+ * @param float64OutValue mutable out value, the result of the mapping shall be stored in
+ * @return true, if the mapping was successful and float64OutValue is valid (false otherwise)   
+ */
+public boolean mapFromUint32ToFloat64(			uint32			uint32InValue,
+												uint32			MIN_I,
+												uint32			MAX_I,
+												list<uint32>	ERROR_I,
+												float64			MIN_F,
+												float64			MAX_F,			
+										mutable float64			float64OutValue )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_MAPFROMUINT32TOFLOAT64";
+
+	// ATTENTION:
+	// although uint32InValue, as well as MIN_I and MAX_I are of type uint32, we need to operate with uint64 internally,
+	// using    _xR,                     MIN_R and MAX_R,
+	// since intermediate processing results might be twice the possible range of uint32.
+
+	// const:
+	// source range
+			uint64	MIN_R = (uint64)MIN_I;
+			uint64	MAX_R = (uint64)MAX_I;
+
+	// vars:
+	// input value
+	mutable uint64	_xR = (uint64)uint32InValue;
+
+	// output value
+	mutable float64	_xD = 0.0fw;
+
+
+	mutable boolean ret = true;
+
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue );
+	
+	// is uint32InValue within error-on-purpose list?
+	if( has( ERROR_I, uint32InValue ) )
+	{	// uint32InValue is within error-on-purpose list
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		ret = false;
+	}
+
+	// is uint32InValue out of range (too small)
+	if( ret && ( uint32InValue < MIN_I ) )
+	{	// uint32InValue is too small
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		ret = false;
+	}
+
+	// is uint32InValue out of range (too big)
+	if( ret && ( uint32InValue > MAX_I ) )
+	{	// uint32InValue is too big
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		ret = false;
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so let's try the mapping...
+
+		_xD = MIN_F + ( ( MAX_F - MIN_F ) * ( (float64)( _xR - MIN_R ) / (float64)( MAX_R - MIN_R ) ) );
+
+		// ret = true; // still the case...
+	}
+
+	// check range of result
+	if( MIN_F <= MAX_F )
+	{	// regular case of target range limits (e.g. ascending x0 ... xn)
+		if( _xD < MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			ret = false;
+		}
+		
+		if( ret && _xD > MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			ret = false;
+		}
+	}
+	else
+	{	// reverse case of target range limits (e.g. descending xn ... x0)
+		if( _xD > MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			ret = false;
+		}
+		
+		if( ret && _xD < MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			ret = false;
+		}
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so put out the mapped value in the out parameter
+		swap( float64OutValue, _xD ); 
+	}
+	else
+	{
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
+		ret = ret;		
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \mapFromUint32ToFloat64 ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function maps an int16InValue out of a range between MIN_I and MAX_I to a float64 value
+ * into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a
+ * platform roll angle (short) into decimal degrees between -50..+50.
+ * If the mapping fails, e.g. since int16InValue is out of range or contained in ERROR_I,
+ * the return value will be false and the content of the mutable out param float64OutValue
+ * will be kept unmodified.
+ * Hint: if the input value has to be converted from a list of uint8 values into an int16 value
+ * first, use the native function common::uint8ListToInt16()
+ * @param int16InValue int16 value containing a value between MIN_I and MAX_I to be mapped
+ * @param MIN_I minimal value of the range of int16 values allowed for int16InValue 
+ * @param MAX_I maximal value of the range of int16 values allowed for int16InValue 
+ * @param ERROR_I list of optional values to be considered as invalid although formally in range 
+ * @param MIN_F minimal value of the range of float64 values int16InValue shall be mapped into 
+ * @param MAX_F maximal value of the range of float64 values int16InValue shall be mapped into 
+ * @param float64OutValue mutable out value, the result of the mapping shall be stored in
+ * @return true, if the mapping was successful and float64OutValue is valid (false otherwise)   
+ */
+public boolean mapFromInt16ToFloat64(			int16			int16InValue,
+												int16			MIN_I,
+												int16			MAX_I,
+												list<int16>		ERROR_I,
+												float64			MIN_F,
+												float64			MAX_F,			
+										mutable float64			float64OutValue )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_MAPFROMINT16TOFLOAT64";
+
+	// ATTENTION:
+	// although int32InValue, as well as MIN_I and MAX_I are of type int16, we need to operate with int32 internally,
+	// using    _xR,                     MIN_R and MAX_R,
+	// since intermediate processing results might be twice the possible range of int16.
+
+	// const:
+	// source range
+			int32	MIN_R = (int32)MIN_I;
+			int32	MAX_R = (int32)MAX_I;
+
+	// vars:
+	// input value
+	mutable int32	_xR = (int32)int16InValue;
+
+	// output value
+	mutable float64	_xD = 0.0fw;
+
+
+	mutable boolean ret = true;
+
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue );
+	
+	// is int16InValue within error-on-purpose list?
+	if( has( ERROR_I, int16InValue ) )
+	{	// int16InValue is within error-on-purpose list
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		ret = false;
+	}
+
+	// is int16InValue out of range (too small)
+	if( ret && ( int16InValue < MIN_I ) )
+	{	// int16InValue is too small
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		ret = false;
+	}
+
+	// is int16InValue out of range (too big)
+	if( ret && ( int16InValue > MAX_I ) )
+	{	// int16InValue is too big
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		ret = false;
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so let's try the mapping...
+
+		_xD = MIN_F + ( ( MAX_F - MIN_F ) * ( (float64)( _xR - MIN_R ) / (float64)( MAX_R - MIN_R ) ) );
+
+		// ret = true; // still the case...
+	}
+
+	// check range of result
+	if( MIN_F <= MAX_F )
+	{	// regular case of target range limits (e.g. ascending -x ... +x)
+		if( _xD < MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			ret = false;
+		}
+		
+		if( ret && _xD > MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			ret = false;
+		}
+	}
+	else
+	{	// reverse case of target range limits (e.g. descending +x ... -x)
+		if( _xD > MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			ret = false;
+		}
+		
+		if( ret && _xD < MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			ret = false;
+		}
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so put out the mapped value in the out parameter
+		swap( float64OutValue, _xD ); 
+	}
+	else
+	{
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
+		ret = ret;		
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \mapFromInt16ToFloat64 ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function maps an uint16InValue out of a range between MIN_I and MAX_I to a float64 value
+ * into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a
+ * platform heading angle into decimal degrees between 0..+360.
+ * If the mapping fails, e.g. since uint16InValue is out of range or contained in ERROR_I,
+ * the return value will be false and the content of the mutable out param float64OutValue
+ * will be kept unmodified.
+ * Hint: if the input value has to be converted from a list of uint8 values into an uint16 value
+ * first, use the native function common::uint8ListToUint16()
+ * @param uint16InValue uint16 value containing a value between MIN_I and MAX_I to be mapped
+ * @param MIN_I minimal value of the range of uint16 values allowed for uint16InValue 
+ * @param MAX_I maximal value of the range of uint16 values allowed for uint16InValue 
+ * @param ERROR_I list of optional values to be considered as invalid although formally in range 
+ * @param MIN_F minimal value of the range of float64 values uint16InValue shall be mapped into 
+ * @param MAX_F maximal value of the range of float64 values uint16InValue shall be mapped into 
+ * @param float64OutValue mutable out value, the result of the mapping shall be stored in
+ * @return true, if the mapping was successful and float64OutValue is valid (false otherwise)   
+ */
+public boolean mapFromUint16ToFloat64(			uint16			uint16InValue,
+												uint16			MIN_I,
+												uint16			MAX_I,
+												list<uint16>	ERROR_I,
+												float64			MIN_F,
+												float64			MAX_F,			
+										mutable float64			float64OutValue )
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_MAPFROMUINT16TOFLOAT64";
+
+	// ATTENTION:
+	// although uint16InValue, as well as MIN_I and MAX_I are of type uint16, we need to operate with uint32 internally,
+	// using    _xR,                     MIN_R and MAX_R,
+	// since intermediate processing results might be twice the possible range of uint16.
+
+	// const:
+	// source range
+			uint32	MIN_R = (uint32)MIN_I;
+			uint32	MAX_R = (uint32)MAX_I;
+
+	// vars:
+	// input value
+	mutable uint32	_xR = (uint32)uint16InValue;
+
+	// output value
+	mutable float64	_xD = 0.0fw;
+
+
+	mutable boolean ret = true;
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue );
+	
+	// is uint16InValue within error-on-purpose list?
+	if( has( ERROR_I, uint16InValue ) )
+	{	// uint16InValue is within error-on-purpose list
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		ret = false;
+	}
+
+	// is uint16InValue out of range (too small)
+	if( ret && ( uint16InValue < MIN_I ) )
+	{	// uint16InValue is too small
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		ret = false;
+	}
+
+	// is uint16InValue out of range (too big)
+	if( ret && ( uint16InValue > MAX_I ) )
+	{	// uint16InValue is too big
+		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		ret = false;
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so let's try the mapping...
+
+		_xD = MIN_F + ( ( MAX_F - MIN_F ) * ( (float64)( _xR - MIN_R ) / (float64)( MAX_R - MIN_R ) ) );
+
+		// ret = true; // still the case...
+	}
+
+	// check range of result
+	if( MIN_F <= MAX_F )
+	{	// regular case of target range limits (e.g. ascending x0 ... xn)
+		if( _xD < MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			ret = false;
+		}
+		
+		if( ret && _xD > MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			ret = false;
+		}
+	}
+	else
+	{	// reverse case of target range limits (e.g. descending xn ... x0)
+		if( _xD > MIN_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			ret = false;
+		}
+		
+		if( ret && _xD < MAX_F )
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			ret = false;
+		}
+	}
+	
+	
+	if( ret )
+	{	// everything fine so far, so put out the mapped value in the out parameter
+		swap( float64OutValue, _xD );
+	}
+	else
+	{
+		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
+		ret = ret;
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \mapFromUint16ToFloat64 ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function returns the arc tangent of the two numbers x and y.
+ * It is similar to calculating atan( y / x ), except that the signs
+ * of both arguments are used to determine the quadrant of the result.
+ * The result is an angle expressed in radians and will be within the
+ * range of \[-PI()..PI()\], rather than for just atan(), which uses a
+ * range of \[-PI()/2..PI()/2\] instead of.
+ * The following cases are considered:
+ * * `x > 0				=> atan( y / x )`
+ * * `x < 0 && y >= 0	=> atan( y / x ) + PI()`
+ * * `x < 0 && y < 0	=> atan( y / x ) - PI()`
+ * * `x = 0 && y > 0	=> +PI() / 2`
+ * * `x = 0 && y < 0	=> -PI() / 2`
+ * * `x = 0 && y = 0	=> nanl()`
+ * @param y float64 containing the y value (vertical value) 
+ * @param x float64 containing the x value (horizontal value)
+ * @return atan2 float64 arc tangent of x and y in rad within range -PI()..PI()   
+ */
+public float64 atan2(
+						float64	y,	// y coordinate
+						float64	x	// x coordinate
+					)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_ATAN2";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received y: " + (rstring)y );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received x: " + (rstring)x );
+	}
+
+	mutable float64	ret = nanl();
+//	mutable	float64 _a = nanl();
+
+	if( 0.0fl < x )
+	{	// x > 0
+		ret = atan( y / x );
+	}
+	else
+	{	// x <= 0
+		if( 0.0fl > x )
+		{	// x < 0
+			ret = 0.0fl <= y ? atan( y / x ) + PI() : atan( y / x ) - PI();
+		}
+		else
+		{	// x = 0
+			if( 0.0fl != y )
+			{	// y < 0 || y > 0
+				ret = 0.0fl < y ? PI() / 2.0fl : PI() / -2.0fl;
+			}
+//			else
+//			{	// y = 0
+//				ret = nanl();
+//			}					
+		}
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \atan2 ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function validates the dimension of a matrix A (unbounded two-dimensional array)
+ * against a given number of rows and columns.
+ * The first index of the matrix always refers to rows, whereas the second index points
+ * to columns.
+ * The number of rows must match the given value and the numbers of columns must match
+ * the given value for each row.
+ * On purpose, we do not use an unsigned number format for r and c, since a int32 number
+ * can be used as index in the array directly without the need to cast.
+ * Anyway, we need to verify the valid range (greater than zero) to be handed over for
+ * r and c.
+ * @param A list<list<float64>> containing the matrix to validate the dimension of 
+ * @param r int32 containing the expected number of row, must be greater than zero
+ * @param c int32 containing the expected number of columns per row, must be greater than zero
+ * @return true, if the dimension of the matrix A matches the expected number of rows and columns (false otherwise)   
+ */
+public boolean isMatrixDimensionValid(		
+										list<list<float64>>	A,	// matrix to validate the dimension of
+										int32				r,	// expected number of rows
+										int32				c	// expected number of columns per row
+										)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_ISMATRIXDIMENSIONVALID";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A: " + (rstring)A );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received number of expected rows            r: " + (rstring)r );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received number of expected columns per row c: " + (rstring)r );
+	}
+
+	mutable boolean	ret = true;
+
+	mutable int32 _rA = size( A );	// rows, first index
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _rA: " + (rstring)_rA );
+
+
+	// only continue, if expected number of rows is greater than zero
+	if( ret
+		&& ( 1 > r )
+		)
+	{
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of expected rows    r: " + (rstring)r );
+		ret = false;
+	}
+
+	// only continue, if expected number of columns is greater than zero
+	if( ret
+		&& ( 1 > c )
+		)
+	{
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of expected columns c: " + (rstring)c );
+		ret = false;
+	}
+
+
+	// only continue, if A has the expected number of rows
+	if( ret
+		&& ( r != _rA )
+		)
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** number of rows in matrix _rA: " + (rstring)_rA + " does not match expectation r: " + (rstring)r );
+		ret = false;
+	}
+	
+	// if successful so far, now check, if A has the expected number of columns in each row
+	if( ret
+		)
+	{
+		mutable int32 i = 0;
+		for( list<float64> RA in A )
+		{
+			if( size( RA ) != c )
+			{
+				appTrc( Trace.trace, FUNCTION_NAME + ": *** number of columns in matrix _cA(row " + (rstring)i + "): " + (rstring)size( RA ) + " does not match expectation c: " + (rstring)c );
+				ret = false;
+				break;
+			}
+			else
+			{
+				i++;
+			}
+		}
+	}
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \isMatrixDimensionValid ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function multiplies two matrices (unbounded two-dimensional arrays) and provides the
+ * result also as two-dimensional array. The first index always refers to rows, whereas the second index points to columns.
+ * The number of rows and columns of the given factor matrices will be evaluated automatically and the results matrix
+ * will contain the appropriate number of rows and columns according to the multiplication operation, but of course,
+ * the number of columns of the first factor matrix must match the number of rows of the second factor matrix.
+ * @param A list<list<float64>> containing the first factor matrix
+ * @param B list<list<float64>> containing the second factor matrix
+ * @param C mutable list<list<float64>> containing the product matrix of A * B
+ * @return true, if the matrix multiplication was successful and C is valid (false otherwise)   
+ */
+public boolean multiplyMatrices(		
+											list<list<float64>>	A,	// first factor matrix
+											list<list<float64>>	B,	// second factor matrix	
+									mutable list<list<float64>>	C	// out matrix containing the product of A * B
+								)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_MULTIPLYMATRICES";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 1st matrix A: " + (rstring)A );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 2nd matrix B: " + (rstring)B );
+	}
+
+	mutable boolean	ret = true;
+
+	mutable int32 _zA = size( A );	// rows, first index
+	mutable int32 _sA = 0;			// columns, second index
+	mutable int32 _zB = size( B );	// rows, first index
+	mutable int32 _sB = 0;			// columns, second index
+	
+	// helper variable for the multiplication
+	mutable list<list<float64>>	_C = (list<list<float64>>)[];	// output buffer
+	mutable list<float64>	_cRow = (list<float64>)[];			// buffer row
+	mutable float64		_c = 0.0fl;								// buffer column element of recent row
+	
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** _zA: " + (rstring)_zA );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** _zB: " + (rstring)_zB );
+	}
+
+	// only continue, if A has at least one row
+	if( ret
+		&& ( 0 >= _zA )
+		)
+	{
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of rows _zA: " + (rstring)_zA );
+		ret = false;
+	}
+
+	// only continue, if A has at least one row
+	if( ret
+		&& ( 0 >= _zB )
+		)
+	{
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of rows _zB: " + (rstring)_zB );
+		ret = false;
+	}
+	
+	// now check, if A has at least one column in each row and the same number of rows in each column
+	if( ret
+		)
+	{
+		_sA = size( A[0] );				// we have already checked that at least one rows is present, so we access this index...
+
+		if( _sA != _zB )
+		{	// number of columns of A's first row does not match number of rows of B! 
+			appTrc( Trace.error, FUNCTION_NAME + ": *** number of colums _sA(row 0): " + (rstring)_sA + " does not match number of rows _zB: " + (rstring)_zB );
+			ret = false;
+		}
+
+		// only continue, if successful so far...
+		if( ret )
+		{		
+			if( 0 < _sA )
+			{
+				mutable int32 i = 1;
+				for( list<float64> ZA in A )
+				{
+					if( size( ZA ) != _sA )
+					{
+						appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sA(row " + (rstring)i + "): " + (rstring)size( ZA ) );
+						ret = false;
+						break;
+					}
+					else
+					{
+						i++;
+					}
+				}  
+			}
+			else
+			{
+				appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sA(row 0): " + (rstring)_sA );
+				ret = false;
+			}
+		}
+
+	}
+
+	// now check, if B has at least one column in each row and the same number of rows in each column
+	if( ret
+		)
+	{
+		_sB = size( B[0] );				// we have already checked that at least one rows is present, so we access this index...
+
+		if( 0 < _sB )
+		{
+			mutable int32 i = 1;
+			for( list<float64> ZB in B )
+			{
+				if( size( ZB ) != _sB )
+				{
+					appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sB(row " + (rstring)i + "): " + (rstring)size( ZB ) );
+					ret = false;
+					break;
+				}
+				else
+				{
+					i++;
+				}
+			}
+		}
+		else
+		{
+			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sB(row 0): " + (rstring)_sB );
+			ret = false;
+		}
+	}
+
+	if( ret )
+	{	// finally, we can be sure, matrices are valid and multiplication should work, so let's do it ...
+	
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** _sA: " + (rstring)_sA );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** _sB: " + (rstring)_sB );
+			
+		for( int32 _z in range( 0, _zA ) )
+		{	// construct row by row
+			for( int32 _s in range( 0, _sB ) )
+			{	// construct rows columns by column
+				for( int32 _i in range( 0, _sA ) )
+				{	// multiply all elements in recent row of A with all elements in recent column of B
+					_c = _c + ( (A[_z][_i])  *  (B[_i][_s]) );
+				}
+				// once a column has been calculated, append it to the recent row			
+				appendM( _cRow, _c );
+				// and clean the temporary buffer up again
+				_c = 0.0fl;			
+			}
+			// once a row is complete, append it to C 
+			appendM( _C, _cRow );
+			// and clean the temporary buffer up again
+			clearM( _cRow );
+		}
+
+		// finally fill the mutable out parameter with the result matrix
+		swap( C, _C );
+	}	
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \multiplyMatrices ###
+
+
+// ################################################################################################################################################################################
+
+
+/**
+ * This function calculates the scalar product of two matrices (unbounded two-dimensional arrays) and provides the
+ * result also as float64 mutable out parameter.
+ * Within the matrix representations, the first index always refers to rows, whereas the second index points to columns.
+ * The number of rows and columns of the given factor matrices will be evaluated automatically and the first element of
+ * the first matrix will be multiplied with the first element of the second matrix and the respective products of the
+ * consecutive elements of the matrices will be added thereafter in incrementing element's oder, one by one.
+ * Although each of the both matrices must only have one column or one row for one of their dimensions, and the number
+ * of elements in the other dimension (column or row) must be identical for both of the two matrices, it does not matter,
+ * which dimension holds multiple elements (in rows or columns) and it does not need to be the same one for both of the
+ * two matrices.
+ * If the conditions above are not met, the mutable out parameter will not be changed and the return value of the function
+ * will be false.   
+ * @param A list<list<float64>> containing the first factor matrix
+ * @param B list<list<float64>> containing the second factor matrix
+ * @param s mutable float64 scalar value, containing the scalar product of A ° B, A' ° B, A ° B' or A' ° B' depending of the dimensions of A and B.
+ * @return true, if the scalar product of A and B could be calculated successfully and C is valid (false otherwise)   
+ */
+public boolean scalarProduct(		
+										list<list<float64>>	A,	// first factor matrix
+										list<list<float64>>	B,	// second factor matrix	
+								mutable float64				s	// scalar product of A and B
+							)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_SCALARPRODUCT";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 1st matrix A: " + (rstring)A );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 2nd matrix B: " + (rstring)B );
+	}
+
+	mutable boolean	ret = true;
+	
+//	mutable float64 _p = nanl();	// doesn't work - looks like, if nanl() + ... = nanl(), regardless of ...
+	mutable float64 _p = 0.0fl;
+	
+	mutable int32 _zA = 0;	// A rows, first index
+	mutable int32 _sA = 0;	// A columns, second index
+	mutable int32 _zB = 0;	// B rows, first index
+	mutable int32 _sB = 0;	// B columns, second index
+	
+	ret = getMatrixDimension( A, _zA, _sA );
+	
+	if( ret )
+	{	// only continue, if successful so far
+		ret = getMatrixDimension( B, _zB, _sB );
+	}
+	
+	if( ret )
+	{	// if successful so far, check if A and B are "compatible"
+		if( _zA == _zB )
+		{	// rows match
+			appTrc( Trace.trace, FUNCTION_NAME + ": *** rows _zA: " + (rstring)_zA + " matches rows _zB: " + (rstring)_zB );
+			if( _sA == _sB )
+			{	// columns also match
+				appTrc( Trace.trace, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " matches columns _sB: " + (rstring)_sB );
+				if( 1 == _zA )
+				{	// everything fine, we will iterate through elements in A[0][i] and B[0][i]	
+					for( int32 i in range( 0, _sA ) )
+					{
+						_p += A[0][i] * B[0][i];
+					}
+				}
+				else
+				{
+					if( 1 == _sA )
+					{	// everything fine, we will iterate through elements in A[i][0] and B[i][0]
+						for( int32 i in range( 0, _zA ) )
+						{
+							_p += A[i][0] * B[i][0];
+						}
+					}
+					else
+					{
+						if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** dimensions not compatible - _zA: " + (rstring)_zA + ", _sA: " + (rstring)_sA + ", _zB: " + (rstring)_zB + ", _sB: " + (rstring)_sB  );
+						ret = false;
+					}
+				}
+			}
+			else
+			{
+				appTrc( Trace.error, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " does not match columns _sB: " + (rstring)_sB );
+				ret = false;
+			}
+		}
+		else
+		{	// rows do not match
+			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** rows _zA: " + (rstring)_zA + " does not match rows _zB: " + (rstring)_zB );
+			
+			if( _zA == _sB )
+			{	// rows A match columns B
+				if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** rows _zA: " + (rstring)_zA + " matches columns _sB: " + (rstring)_sB );
+				if( _sA == _zB )
+				{	// columns A also match rows B
+					if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " matches rows _zB: " + (rstring)_zB );
+					if( 1 == _zA )
+					{	// everything fine, we will iterate through elements in A[0][i] and B[i][0]	
+						for( int32 i in range( 0, _sA ) )
+						{
+							_p += A[0][i] * B[i][0];
+						}
+					}
+					else
+					{
+						if( 1 == _sA )
+						{	// everything fine, we will iterate through elements in A[i][0] and B[0][i]
+							for( int32 i in range( 0, _zA ) )
+							{
+								_p += A[i][0] * B[0][i];
+							}
+						}
+						else
+						{
+							if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** dimensions not compatible - _zA: " + (rstring)_zA + ", _sA: " + (rstring)_sA + ", _zB: " + (rstring)_zB + ", _sB: " + (rstring)_sB  );
+							ret = false;
+						}
+					}
+				}
+				else
+				{
+					appTrc( Trace.error, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " does not match rows _zB: " + (rstring)_zB );
+					ret = false;
+				}
+			}
+			else
+			{
+				appTrc( Trace.error, FUNCTION_NAME + ": *** rows _zA: " + (rstring)_zA + " does not match columns _sB: " + (rstring)_sB );
+				ret = false;
+			}
+		}
+	}
+	
+	if( ret )
+	{	// if still successfull, we have a valid scalar product value in _p
+		// so we go ahead and swap it into s
+		swap( s , _p );
+		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** assigned s = " + (rstring)s );
+	}
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \scalarProduct ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function evaluates the dimension of a matrix A (unbounded two-dimensional array)
+ * and returns the number of rows and columns as mutable out parameters.
+ * The first index of the matrix always refers to rows, whereas the second index points
+ * to columns.
+ * The number of columns must be identical for each row or the matrix will be considered
+ * as invalid and the function will return false.
+ * An empty matrix, containing no rows at all or at least one row, but no columns will also
+ * be considered as invalid.
+ * Attention: the mutable out parameters r and c will not be changed in case of invalid matrix.
+ * Thus, we will never return r=0 or c=0, but keep previous values untouched.
+ * On purpose, we do not use an unsigned number format for r and c, since a int32 number
+ * can be used as index in the array directly without the need to cast.
+ * @param A list<list<float64>> containing the matrix to evaluate the dimension of 
+ * @param r mutable int32 will be filled with the number of rows in case of a valid matrix
+ * @param c mutable int32 will be filled with the number of columns in case of a valid matrix
+ * @return true, if the matrix is valid, i.e. contains the same number of columns in each row   
+ */
+public boolean getMatrixDimension(
+												list<list<float64>>	A,	// matrix to evaluate the dimension of
+										mutable	int32				r,	// evaluated number of rows
+										mutable	int32				c	// evaluated number of columns per row
+									)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_GETMATRIXDIMENSION";
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A: " + (rstring)A );
+
+	mutable boolean	ret = true;
+
+	mutable int32 _rA = size( A );	// number of rows (first index in the list of lists)
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _rA: " + (rstring)_rA );
+
+	// only continue, if number of rows is greater than zero
+	if( ret
+		&& ( 1 > _rA )
+		)
+	{
+		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** invalid number of rows (less than 1) in matrix _rA: " + (rstring)_rA );
+		ret = false;
+	}
+	
+	// if successful so far, now check, the expected number of columns in each row
+	if( ret )
+	{
+		// first get number of columns in the first row
+		mutable int32 _cA = size( A[0] );	// we can safely do that, since we know already that at least one row exists
+
+		// only continue, if number of columns in first row is greater than zero
+		if( 1 > _cA )
+		{
+			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** invalid number of columns (less than 1) in matrix _cA(row 0): " + (rstring)_cA );
+			ret = false;
+		}
+		
+		if( ret )
+		{	// at least one column in row 0, so lets see, if the other rows (if present) have the same number of columns
+			mutable int32 i = 0;	// although redundant, we do it again for row 0 for being able to smoothly iterate...
+			for( list<float64> RA in A )
+			{
+				if( size( RA ) != _cA )
+				{
+					if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** number of columns in matrix _cA(row " + (rstring)i + "): " + (rstring)size( RA ) + " does not match number of columns _cA(row 0): " + (rstring)_cA );
+					ret = false;
+					break;
+				}
+				else
+				{
+					i++;
+				}
+			}
+			
+			if( ret )
+			{	// if everything is still fine, we have a valid matrix and know the dimension
+				// so fill in the number of rows and columns to the mutable out parameters
+				swap( r, _rA );
+				swap( c, _cA );
+				if ( isTraceable( Trace.trace ) )
+				{
+					appTrc( Trace.trace, FUNCTION_NAME + ": *** number of rows in matrix A            r: " + (rstring)r );
+					appTrc( Trace.trace, FUNCTION_NAME + ": *** number of columns per row in matrix A c: " + (rstring)c );
+				}
+			}
+		}
+	}
+	
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \getMatrixDimension ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function obtains a single row from a matrix A (unbounded two-dimensional array)
+ * and returns it as a new matrix in the mutable out parameter R.
+ * The first index of the matrix always refers to rows, whereas the second index points
+ * to columns.
+ * Matrix A must be valid, i.e. at least one row must exist and contain at least one column.
+ * The number of columns must be identical for each row or the matrix will be considered
+ * as invalid and the function will return false.
+ * An empty matrix, containing no rows at all or at least one row, but no columns will also
+ * be considered as invalid.
+ * On purpose, we do not use an unsigned number format for r and c, since a int32 number
+ * can be used as index in the array directly without the need to cast.
+ * @param A list<list<float64>> containing the matrix to obtain a row from 
+ * @param r int32 the index of the row to obtain from matrix A
+ * @param R mutable list<list<float64>>, a new matrix containing only the one row, obtained from A
+ * @return true, if the row with index r could be obtained from A and R is valid   
+ */
+public boolean getMatrixRow(
+										list<list<float64>>	A,	// matrix to obtain a row from
+										int32				r,	// index of row to obtain (1st row means 0)
+								mutable	list<list<float64>>	R	// matrix containing only row(r) from A
+							)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_GETMATRIXROW";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A:    " + (rstring)A );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received row index r: " + (rstring)r );
+	}
+
+	mutable boolean	ret = true;
+
+	// only continue, if r is in range
+	if( ret
+		&& ( 0 > r )
+		)
+	{
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid value (0.. allowed) r: " + (rstring)r );
+		ret = false;
+	}
+
+	// only continue, if successful so far
+	if( ret )
+	{
+		mutable int32 _r = -1;	// used to store dimensions of A to be evaluated first
+		mutable int32 _c = -1;	// used to store dimensions of A to be evaluated first
+	
+		// check if A is valid at all and get the number of its rows and columns
+		ret = getMatrixDimension( A, _r, _c );
+
+		// only continue if successful so far...
+		if( ret )
+		{
+			// now let's see, if the required row index is valid wrt matrix A
+			if( r < _r )		
+			{
+				mutable list<list<float64>>	_R = (list<list<float64>>)[];	// create empty matrix to fill the row in 
+				appendM( _R, A[r] );	// we can safely do that, since we know that A is valid and has at least r+1 rows
+
+				// since nothing can fail here, and the job is done, we can just swap _R into the R and return true
+				swap( R, _R );
+			}
+			else
+			{
+				appTrc( Trace.error, FUNCTION_NAME + ": *** invalid row index r: " + (rstring)r + " must be less than _r: " + (rstring)_r );
+				ret = false;
+			}
+		}
+		else
+		{	// could not evaluate dimension of matrix A, seems to be invalid...
+			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
+			ret = ret;
+		}
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \getMatrixRow ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function obtains a single column from a matrix A (unbounded two-dimensional array)
+ * and returns it as a new matrix in the mutable out parameter R.
+ * The first index of the matrix always refers to rows, whereas the second index points
+ * to columns.
+ * Matrix A must be valid, i.e. at least one row must exist and contain at least one column.
+ * The number of columns must be identical for each row or the matrix will be considered
+ * as invalid and the function will return false.
+ * An empty matrix, containing no rows at all or at least one row, but no columns will also
+ * be considered as invalid.
+ * On purpose, we do not use an unsigned number format for r and c, since a int32 number
+ * can be used as index in the array directly without the need to cast.
+ * @param A list<list<float64>> containing the matrix to obtain a column from 
+ * @param c int32 the index of the column to obtain from matrix A
+ * @param C mutable list<list<float64>>, a new matrix containing only the one column, obtained from A
+ * @return true, if the column with index c could be obtained from A and C is valid   
+ */
+public boolean getMatrixColumn(
+											list<list<float64>>	A,	// matrix to obtain a column from
+											int32				c,	// index of column to obtain (1st column means 0)
+									mutable	list<list<float64>>	C	// matrix containing only column(c) from A
+								)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_GETMATRIXCOLUMN";
+
+	if ( isTraceable( Trace.trace ) )
+	{
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A:       " + (rstring)A );
+		appTrc( Trace.trace, FUNCTION_NAME + ": *** received column index c: " + (rstring)c );
+	}
+
+	mutable boolean	ret = true;
+
+
+	// only continue, if c is in range
+	if( ret
+		&& ( 0 > c )
+		)
+	{
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid value (0.. allowed) c: " + (rstring)c );
+		ret = false;
+	}
+
+	// only continue, if successful so far
+	if( ret )
+	{
+		mutable int32 _r = -1;	// used to store dimensions of A to be evaluated first
+		mutable int32 _c = -1;	// used to store dimensions of A to be evaluated first
+	
+		// check if A is valid at all and get the number of its rows and columns
+		ret = getMatrixDimension( A, _r, _c );
+
+
+		// only continue if successful so far...
+		if( ret )
+		{
+			// now let's see, if the required row index is valid wrt matrix A
+			if( c < _c )
+			{
+				mutable list<list<float64>>	_C = (list<list<float64>>)[];	// create empty matrix to fill the column in
+				mutable list<float64>		_row = (list<float64>)[];		// temporary row buffer
+
+				for( list<float64> RA in A )
+				{
+					appendM( _row, RA[c] );	// we can safely do that, since we know that A is valid and has at least c+1 columns in every row
+					appendM( _C, _row );	// since our output matrix shall contain only one column element per row, we are done for this row and can append it to _C
+					clearM( _row );			// so clean up the temporary row buffer again and proceed to the next row
+				}
+
+				// since nothing can fail here, and the job is done, we can just swap _C into the C and return true
+				swap( C, _C );
+			}
+			else
+			{
+				appTrc( Trace.error, FUNCTION_NAME + ": *** invalid column index c: " + (rstring)c + " must be less than _c: " + (rstring)_c );
+				ret = false;
+			}
+		}
+		else
+		{	// could not evaluate dimension of matrix A, seems to be invalid...
+			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
+			ret = ret;
+		}
+	
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \getMatrixColumn ###
+
+
+// ################################################################################################################################################################################
+
+/**
+ * This function computes the transposed matrix of a matrix A (unbounded two-dimensional array)
+ * and returns it as a new matrix in the mutable out parameter AT.
+ * The first index of the matrix always refers to rows, whereas the second index points
+ * to columns.
+ * Matrix A must be valid, i.e. at least one row must exist and contain at least one column.
+ * The number of columns must be identical for each row or the matrix will be considered
+ * as invalid and the function will return false.
+ * An empty matrix, containing no rows at all or at least one row, but no columns will also
+ * be considered as invalid.
+ * On purpose, we do not use an unsigned number format for r and c, since a int32 number
+ * can be used as index in the array directly without the need to cast.
+ * @param A list<list<float64>> containing the matrix to be transposed 
+ * @param AT mutable list<list<float64>>, a new matrix containing the transposed matrix of A
+ * @return true, if matrix A could be transposed and TA is valid   
+ */
+public boolean transposeMatrix(
+											list<list<float64>>	A,	// matrix to be transposed
+									mutable	list<list<float64>>	AT	// matrix containing the transposed matrix of A
+								)
+{
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_TRANSPOSEMATRIX";
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A:       " + (rstring)A );
+
+	mutable boolean	ret = true;
+
+	mutable int32 _r = -1;	// used to store dimensions of A to be evaluated first
+	mutable int32 _c = -1;	// used to store dimensions of A to be evaluated first
+
+	// check if A is valid at all and get the number of its rows and columns
+	ret = getMatrixDimension( A, _r, _c );
+
+	// only continue if successful so far...
+	if( ret )
+	{
+			mutable list<list<float64>>	_AT = (list<list<float64>>)[];	// create empty matrix to fill the _row in
+			mutable list<float64>		_row = (list<float64>)[];		// temporary row buffer
+
+			for( int32 i in range( 0, _c ) )
+			{	// iterate through each column and collect elements from every row each time to create _AT row by row
+				for( list<float64> RA in A )
+				{
+					appendM( _row, RA[i] );		// we can safely do that, since we know that A is valid and has at least _c columns in every row
+				}
+				// we are done for this target row, so push in into _AT
+				appendM( _AT, _row );
+				// and clean up the buffer again before continuing with the next one
+				clearM( _row );
+			}
+
+			// since nothing can fail here, and the job is done, we can just swap _AT into the AT and return true
+			swap( AT, _AT );
+	}
+	else
+	{	// could not evaluate dimension of matrix A, seems to be invalid...
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
+		ret = ret;
+	}
+
+	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
+	return ret;
+}
+// ### \transposeMatrix ###
+
+
+// EOF ############################################################################################################################################################################
