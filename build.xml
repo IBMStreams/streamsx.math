@@ -158,7 +158,7 @@
 			<arg value="-c"/>
 			<arg value="shopt -s nullglob; for x in samples/*/info.xml; do echo -n ${x%/*};  echo -n : ; done"/>
 		</exec>
-		<echo message="All samples to SPLDOC: ${samples.list}"/>
+		<echo message="All samples list is: ${samples.list}"/>
 		<exec executable="${spl-md}" failonerror="true">
 			<arg value="--include-composite-operator-diagram"/>
 			<arg value="--author"/>
@@ -253,7 +253,10 @@
 			<arg value="--exclude=${toolkit.dir}/build.xml"/>
 			<arg value="--exclude=${toolkit.dir}/pom.xml"/>
 			<arg value="--exclude=${toolkit.dir}/.cproject"/>
-			<arg value="--exclude=${toolkit.dir}/impl/java/*"/>
+			<arg value="--exclude=${toolkit.dir}/impl/java"/>
+			<arg value="--exclude=${toolkit.dir}/impl/Makefile"/>
+			<arg value="--exclude=${toolkit.dir}/impl/obj"/>
+			<arg value="--exclude=${toolkit.dir}/impl/src"/>
 			<arg value="${toolkit.dir}/"/>
 			<arg value="${samples.dir}/"/>
 			<arg value="${doc.string}/"/>
