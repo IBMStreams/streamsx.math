@@ -13,27 +13,27 @@
         <prototype>public float32 uint8ListToFloat32(list&lt;uint8> x)</prototype>
       </function>
       <function>
-        <description>Convert list of 8 uint8 bytes into (signed) int64</description>
+        <description>Convert list of 8 uint8 bytes into (signed) int64. The first list entry is the most significant byte.</description>
         <prototype>public int64 uint8ListToInt64(list&lt;uint8> x)</prototype>
       </function>
       <function>
-        <description>Convert list of 8 uint8 bytes into (unsigned) uint64</description>
+        <description>Convert list of 8 uint8 bytes into (unsigned) uint64. The first list entry is the most significant byte.</description>
         <prototype>public uint64 uint8ListToUint64(list&lt;uint8> x)</prototype>
       </function>
       <function>
-        <description>Convert list of 4 uint8 bytes into (signed) int32</description>
+        <description>Convert list of 4 uint8 bytes into (signed) int32. The first list entry is the most significant byte.</description>
         <prototype>public int32 uint8ListToInt32(list&lt;uint8> x)</prototype>
       </function>
       <function>
-        <description>Convert list of 4 uint8 bytes into (unsigned) uint32</description>
+        <description>Convert list of 4 uint8 bytes into (unsigned) uint32. The first list entry is the most significant byte.</description>
         <prototype>public uint32 uint8ListToUint32(list&lt;uint8> x)</prototype>
       </function>
       <function>
-        <description>Convert list of 2 uint8 bytes into (signed) int16</description>
+        <description>Convert list of 2 uint8 bytes into (signed) int16. The first list entry is the most significant byte.</description>
         <prototype>public int16 uint8ListToInt16(list&lt;uint8> x)</prototype>
       </function>
       <function>
-        <description>Convert list of 2 uint8 bytes into (unsigned) uint16</description>
+        <description>Convert list of 2 uint8 bytes into (unsigned) uint16. The first list entry is the most significant byte.</description>
         <prototype>public uint16 uint8ListToUint16(list&lt;uint8> x)</prototype>
       </function>
     </functions>
