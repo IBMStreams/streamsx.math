@@ -1,0 +1,24 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite Main {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					uint64 x = 0x00020304050607u;
+					//<norm>rstring y = uint64ToHexString(x);
+					//<pretty>rstring y = uint64ToHexString(x, true, 8ub, "0X", "-");
+					
+					//<norm>rstring   expec = "02 03 04 05 06 07";
+					//<pretty>rstring expec = "0X00-00-02-03-04-05-06-07";
+
+					rstring func = "uint64ToHexString";
+
+					printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " expec=" + (rstring)expec);
+					if (y != expec) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

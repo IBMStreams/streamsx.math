@@ -1,0 +1,38 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite Main {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					list<rstring>   x = ["1",    "true", "TRUE", "True", "t",    "T",   "0",    "false","FALSE","False","f",    "F",    "x",    "",     " trUe ", " false\t"];
+			//<norm>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false,  false,  false,    false];
+			//<norm>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  false,  false,    false];
+		   //<empty>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false,  true,   false,    false];
+		   //<empty>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  true,   false,    false];
+		//<noStrict>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false, false,   true,     false];
+		//<noStrict>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  true,   true,     true];
+					mutable list<boolean> y = [];
+					mutable list<boolean> r = [];
+					mutable int32 i = 0;
+					while (i < size(x)) {
+						mutable boolean yy = false;
+						//<norm>boolean rr = convertToBoolean(x[i], true, false, false, yy);
+						//<empty>boolean rr = convertToBoolean(x[i], true, true, true, yy);
+						//<noStrict>boolean rr = convertToBoolean(x[i], false, true, false, yy);
+						appendM(r, rr);
+						appendM(y, yy);
+						++i;
+					}
+					printStringLn("  y=" + (rstring)y);
+					printStringLn("exy=" + (rstring)exy);
+					printStringLn("  r=" + (rstring)r);
+					printStringLn("exr=" + (rstring)exr);
+					if (y != exy) abort();
+					if (r != exr) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}
