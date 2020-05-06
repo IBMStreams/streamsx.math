@@ -5,13 +5,13 @@ public composite Main {
 		() as Performer = Custom() {
 			logic
 				onProcess: {
-					list<rstring>   x = ["1",    "true", "TRUE", "True", "t",    "T",   "0",    "false","FALSE","False","f",    "F",    "x",    "",     " trUe ", " false\t"];
-			//<norm>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false,  false,  false,    false];
-			//<norm>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  false,  false,    false];
-		   //<empty>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false,  true,   false,    false];
-		   //<empty>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  true,   false,    false];
-		//<noStrict>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false, false,   true,     false];
-		//<noStrict>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  true,   true,     true];
+					list<rstring>   x = ["1",    "true", "TRUE", "True", "t",    "T",   "0",    "false","FALSE","False","f",    "F",    "x",    "",    " \t", " trUe ", " false\t"];
+			//<norm>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false,  false, false, false,    false];
+			//<norm>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  false, false, false,    false];
+		   //<empty>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false,  true,  false, false,    false];
+		   //<empty>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  true,  false, false,    false];
+		//<noStrict>list<boolean> exy = [true,   true,   true,   true,   true,   true,  false,  false,  false,  false,  false,  false,  false,  false, false, true,     false];
+		//<noStrict>list<boolean> exr = [true,   true,   true,   true,   true,   true,  true,   true,   true,   true,   true,   true,   false,  true,  true,  true,     true];
 					mutable list<boolean> y = [];
 					mutable list<boolean> r = [];
 					mutable int32 i = 0;
