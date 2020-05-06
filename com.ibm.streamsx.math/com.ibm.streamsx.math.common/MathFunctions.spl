@@ -1745,7 +1745,7 @@ public boolean transposeMatrix(
  * If allowEmpty is true, the value default will be mapped into the booleanOutValue,
  * if the booleanInString is empty.
  * @param booleanInString the rstring to be validated and converted
- * @param strictParsing if set to true, no trailing invalid characters must be present, even if the string begins with a valid boolean value
+ * @param strictParsing if set to true, no leading or trailing space- and tab-characters must be present and the input case must exactly match one of the acceptable strings
  * @param allowEmpty specifies, if booleanInString may be empty - in this case default will be the result of the conversion
  * @param default specifies the value to return for booleanOutValue, if allowEmpty is true and booleanInString is empty (will be ignored otherwise)
  * @param booleanOutValue out parameter containing the boolean representation of the boolean value contained in booleanInString
@@ -1782,8 +1782,18 @@ public boolean convertToBoolean(	rstring booleanInString,
 			"F"
 		];
 
+	// trim input if not strictParsing
+	if( strictParsing )
+	{
+		_inStr = booleanInString;
+	}
+	else
+	{
+		_inStr = lower( trim( booleanInString, " \t" ) );
+	}
+
 	// check if input is empty and for the case, this is allowed, assign default value
-	if( 1 > length( booleanInString ) )
+	if( 1 > length( _inStr ) )
 	{
 		if( true == allowEmpty )
 		{
@@ -1797,15 +1807,6 @@ public boolean convertToBoolean(	rstring booleanInString,
 	}
 	else
 	{
-		if( strictParsing )
-		{
-			_inStr = booleanInString;
-		}
-		else
-		{
-			_inStr = lower( trim( booleanInString, " \t" ) );
-		}
-
 		if( _inStr in trueElements )
 		{
 			_bool = true;
