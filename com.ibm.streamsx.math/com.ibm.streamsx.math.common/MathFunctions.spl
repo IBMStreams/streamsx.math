@@ -50,15 +50,6 @@ public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBy
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_UINT64TOHEXSTRING";
 
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** int:           " + (rstring)int );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** fillNibble:    " + (rstring)fillNibble );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** fillToBytes:   " + (rstring)fillToBytes );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** prefix:        " + (rstring)prefix );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** byteSeparator: " + (rstring)byteSeparator );
-	}
-
 	uint64 MASK = 15ul;	// 0xf
 	map<uint64, rstring> HEXCODE =	{
 										15ul:"F", 14ul:"E", 13ul:"D", 12ul:"C",
@@ -74,7 +65,7 @@ public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBy
 
 	if( 8ub < fillToBytes )
 	{
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** fillToBytes: " + (rstring)fillToBytes + " out of range [0..8], assuming 8!" );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** fillToBytes: " + (rstring)fillToBytes + " out of range [0..8], assuming 8!" );
 		_ftn = 16ub;					// 2ub * fillToBytes with fillToBytes = 8ub
 	}
 	else
@@ -82,17 +73,8 @@ public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBy
 		_ftn = 2ub * fillToBytes;
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _ftn: " + (rstring)_ftn );
-
 	while( _i < 1ub || ( _i < 16ub && _x > 0ul ) )
 	{
-		if ( isTraceable( Trace.trace ) )
-		{
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _x:         " + (rstring)_x );
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _hexString: " + (rstring)_hexString );
-		}
-
 		if( 0ub < _i && ( ( _i % 2ub ) == 0ub ) && byteSeparator != "" )
 		{
 			_hexString = byteSeparator + _hexString;
@@ -101,13 +83,6 @@ public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBy
 		_hexString = (rstring)( HEXCODE[ _x & MASK ] ) + _hexString;
 		_x >>= 4;
 		_i++;
-
-		if ( isTraceable( Trace.trace ) )
-		{
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _hexString: " + (rstring)_hexString );
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _x:         " + (rstring)_x );
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
-		}
 	}
 
 	// in case fillNibble is true OR fillToBytes is greater than 0:
@@ -116,22 +91,10 @@ public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBy
 	{
 		_hexString = "0" + _hexString;
 		_i++;
-
-		if ( isTraceable( Trace.trace ) )
-		{
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** nibble filler inserted" );
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
-		}
 	}
 
 	while( _i < _ftn )
 	{
-		if ( isTraceable( Trace.trace ) )
-		{
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _ftn: " + (rstring)_ftn );
-		}
-
 		if( 0ub < _i && ( ( _i % 2ub ) == 0ub ) && byteSeparator != "" )
 		{
 			_hexString = byteSeparator + _hexString;
@@ -139,17 +102,10 @@ public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBy
 
 		_hexString = "0" + _hexString;
 		_i++;
-
-		if ( isTraceable( Trace.trace ) )
-		{
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _ftn: " + (rstring)_ftn );
-			appTrc( Trace.trace, FUNCTION_NAME + ": *** _i:         " + (rstring)_i );
-		}
 	}
 
 	_hexString = prefix + _hexString;
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, _hexString = " + (rstring)_hexString );
 	return _hexString;
 }
 // ### \uint64ToHexString ###
@@ -167,10 +123,6 @@ public rstring uint64ToHexString( uint64 int, boolean fillNibble, uint8 fillToBy
  */
 public rstring uint64ToHexString( uint64 int )
 {
-	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_UINT64TOHEXSTRING";
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** using default values for extended printing options" );
-
 	return uint64ToHexString( int, true, 0ub, "", " " );
 }
 // ### \uint64ToHexString ###
@@ -190,14 +142,6 @@ public rstring uint64ToHexString( uint64 int )
  */
 public rstring uint8ListToHexString( list<uint8> byteList, rstring byteSeparator )
 {
-	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_UINT8LISTTOHEXSTRING";
-
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** byteList:      " + (rstring)byteList );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** byteSeparator: " + (rstring)byteSeparator );
-	}
-
 	mutable rstring _hexString = "";	// buffer to construct the string representing the list<uint8> input in "byteList"
 
 	for( uint8 byte in byteList )
@@ -243,13 +187,12 @@ public list<uint8> rstringListToUint8List( list<rstring> stringValues )
 		}
 		else
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** cannot convert _s = " + (rstring)_s );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** cannot convert _s = " + (rstring)_s );
 			clearM( _ret );
 			break;
 		}
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, _ret = " + (rstring)_ret );
 	return _ret;
 }
 // ### \rstringListToUint8List ###
@@ -295,23 +238,27 @@ public boolean convertUint8ListToUint64(	list<uint8>		uint8InValues,
 
 	mutable int32 _idx = 0;
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint8InValues = " + (rstring)uint8InValues );
-
 	if( true == strictParsing )
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing );
 		if( 8 == _size )
 		{
 			ret = true;
 		}
+		else
+		{
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": Failure strictParsing is true but length is not equal 8 *** received uint8InValues = " + (rstring)uint8InValues + " *** length = " + (rstring)length);
+		}
 	}
 	else
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing );
 		if( ( 0 < length ) && ( 8 >= length ) )
 		{
 			_length = ( length > _size ? _size : length );
 			ret = true;
+		}
+		else
+		{
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": Failure invalid length *** received uint8InValues = " + (rstring)uint8InValues + " *** length = " + (rstring)length);
 		}
 	}
 
@@ -337,7 +284,6 @@ public boolean convertUint8ListToUint64(	list<uint8>		uint8InValues,
 		swap( uint64OutValue, _uint64OutValue );
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \convertUint8ListToUint64 ###
@@ -367,12 +313,6 @@ public boolean convertUint8ListToFloat64(			list<uint8>		uint8InValues,
 
 	mutable float64 _float64OutValue = 0.0fl;
 
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint8InValues = " + (rstring)uint8InValues );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received length =        " + (rstring)length );
-	}
-
 	if( 4 == length )
 	{	// conversion to float assumed
 		if( length == size( uint8InValues ) )
@@ -382,7 +322,7 @@ public boolean convertUint8ListToFloat64(			list<uint8>		uint8InValues,
 		}
 		else
 		{	// inconsistent length specified
-				appTrc( Trace.error, FUNCTION_NAME + ": *** inconsistent length =        " + (rstring)length );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** inconsistent length =        " + (rstring)length );
 				ret = false;	// set per default, but needed to avoid empty else
 		}
 	}
@@ -397,13 +337,13 @@ public boolean convertUint8ListToFloat64(			list<uint8>		uint8InValues,
 			}
 			else
 			{	// inconsistent length specified
-				appTrc( Trace.error, FUNCTION_NAME + ": *** inconsistent length =        " + (rstring)length );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** inconsistent length =        " + (rstring)length );
 				ret = false;	// set per default, but needed to avoid empty else
 			}
 		}
 		else
 		{	// invalid length at all ...
-			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid length =        " + (rstring)length );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid length =        " + (rstring)length );
 			ret = false;	// set per default, but needed to avoid empty else
 		}
 	}
@@ -412,7 +352,6 @@ public boolean convertUint8ListToFloat64(			list<uint8>		uint8InValues,
 	{
 		swap( float64OutValue, _float64OutValue );
 	}
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \convertUint8ListToFloat64 ###
@@ -477,17 +416,11 @@ public boolean berOidToUint8List(	list<uint8>			berOidInValues,
 	mutable int32		_bitCounter = 0;
 
 
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received berOidInValues = " + (rstring)berOidInValues );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received strictParsing = " + (rstring)strictParsing );
-	}
-
 	// check, if the received list is not empty
 	// we have to do this to be stable, regardless of strictParsing
 	if( 1 > _size )
 	{	// the list must contain at least one byte
-		appTrc( Trace.error, FUNCTION_NAME + ": *** _size = " + (rstring)_size );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": The list must contain at least one byte *** _size = " + (rstring)_size + " *** berOidInValues: " + (rstring)berOidInValues);
 		_isValid = false;
 	}
 
@@ -498,7 +431,7 @@ public boolean berOidToUint8List(	list<uint8>			berOidInValues,
 		// so check, if the first byte is not 0x80 (leading 0 is not allowed)
 		if( 0x80u == berOidInValues[0] )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing + " but berOidInValues[0] = " + (rstring)berOidInValues[0] );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": The first byte is not 0x80 (leading 0 is not allowed) *** strictParsing = " + (rstring)strictParsing + " but berOidInValues = " + (rstring)berOidInValues );
 			_isValid = false;
 		}
 	}
@@ -532,12 +465,8 @@ public boolean berOidToUint8List(	list<uint8>			berOidInValues,
 			// check, if the number of bytes pushed into _buffer is equal to size( berOidInValues )
 			if( _length != _size )
 			{	// in case of strictParsing, the list must not contain spare bytes
-				appTrc( Trace.error, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing + " but spare bytes detected" );
-				if ( isTraceable( Trace.trace ) )
-				{
-					appTrc( Trace.trace, FUNCTION_NAME + ": *** _size = " + (rstring)_size );
-					appTrc( Trace.trace, FUNCTION_NAME + ": *** _length = " + (rstring)_length );
-				}
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** strictParsing = " + (rstring)strictParsing + " but spare bytes detected" 
+					+ " *** _size = " + (rstring)_size + " *** _length = " + (rstring)_length );
 				_isValid = false;
 			}
 		}
@@ -605,7 +534,6 @@ public boolean berOidToUint8List(	list<uint8>			berOidInValues,
 		ret = true;
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \berOidToUint8List ###
@@ -648,45 +576,36 @@ public boolean mapFromInt32ToFloat64(			int32			int32InValue,
 
 	// const:
 	// source range
-			int64	MIN_R = (int64)MIN_I;
-			int64	MAX_R = (int64)MAX_I;
+	int64	MIN_R = (int64)MIN_I;
+	int64	MAX_R = (int64)MAX_I;
 
 	// vars:
 	// input value
 	mutable int64	_xR = (int64)int32InValue;
 
-	// helpers
-//	mutable int64	R1 = 0w;
-//	mutable int64	R2 = 0w;
-//	mutable float64	D1 = 0.0fw;
-
 	// output value
-	mutable float64	_xD = 0.0fw;
-
+	mutable float64	_xD = 0.0;
 
 	mutable boolean ret = true;
-
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue );
 
 	// is int32InValue within error-on-purpose list?
 	if( has( ERROR_I, int32InValue ) )
 	{	// int32InValue is within error-on-purpose list
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is in ERROR_I = " + (rstring)ERROR_I );
 		ret = false;
 	}
 
 	// is int32InValue out of range (too small)
 	if( ret && ( int32InValue < MIN_I ) )
 	{	// int32InValue is too small
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is less than MIN_I = " + (rstring)MIN_I );
 		ret = false;
 	}
 
 	// is int32InValue out of range (too big)
 	if( ret && ( int32InValue > MAX_I ) )
 	{	// int32InValue is too big
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received int32InValue = " + (rstring)int32InValue + " is greater than MAX_I = " + (rstring)MAX_I );
 		ret = false;
 	}
 
@@ -709,13 +628,13 @@ public boolean mapFromInt32ToFloat64(			int32			int32InValue,
 	{	// regular case of target range limits (e.g. ascending -x ... +x)
 		if( _xD < MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
 			ret = false;
 		}
 
 		if( ret && _xD > MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
 			ret = false;
 		}
 	}
@@ -723,13 +642,13 @@ public boolean mapFromInt32ToFloat64(			int32			int32InValue,
 	{	// reverse case of target range limits (e.g. descending +x ... -x)
 		if( _xD > MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
 			ret = false;
 		}
 
 		if( ret && _xD < MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
 			ret = false;
 		}
 	}
@@ -739,12 +658,6 @@ public boolean mapFromInt32ToFloat64(			int32			int32InValue,
 	{	// everything fine so far, so put out the mapped value in the out parameter
 		swap( float64OutValue, _xD );
 	}
-	else
-	{
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
-	}
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \mapFromInt32ToFloat64 ###
@@ -786,8 +699,8 @@ public boolean mapFromUint32ToFloat64(			uint32			uint32InValue,
 
 	// const:
 	// source range
-			uint64	MIN_R = (uint64)MIN_I;
-			uint64	MAX_R = (uint64)MAX_I;
+	uint64	MIN_R = (uint64)MIN_I;
+	uint64	MAX_R = (uint64)MAX_I;
 
 	// vars:
 	// input value
@@ -796,30 +709,26 @@ public boolean mapFromUint32ToFloat64(			uint32			uint32InValue,
 	// output value
 	mutable float64	_xD = 0.0fw;
 
-
 	mutable boolean ret = true;
-
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue );
 
 	// is uint32InValue within error-on-purpose list?
 	if( has( ERROR_I, uint32InValue ) )
 	{	// uint32InValue is within error-on-purpose list
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is in ERROR_I = " + (rstring)ERROR_I );
 		ret = false;
 	}
 
 	// is uint32InValue out of range (too small)
 	if( ret && ( uint32InValue < MIN_I ) )
 	{	// uint32InValue is too small
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is less than MIN_I = " + (rstring)MIN_I );
 		ret = false;
 	}
 
 	// is uint32InValue out of range (too big)
 	if( ret && ( uint32InValue > MAX_I ) )
 	{	// uint32InValue is too big
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint32InValue = " + (rstring)uint32InValue + " is greater than MAX_I = " + (rstring)MAX_I );
 		ret = false;
 	}
 
@@ -837,13 +746,13 @@ public boolean mapFromUint32ToFloat64(			uint32			uint32InValue,
 	{	// regular case of target range limits (e.g. ascending x0 ... xn)
 		if( _xD < MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
 			ret = false;
 		}
 
 		if( ret && _xD > MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
 			ret = false;
 		}
 	}
@@ -851,13 +760,13 @@ public boolean mapFromUint32ToFloat64(			uint32			uint32InValue,
 	{	// reverse case of target range limits (e.g. descending xn ... x0)
 		if( _xD > MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
 			ret = false;
 		}
 
 		if( ret && _xD < MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
 			ret = false;
 		}
 	}
@@ -867,12 +776,6 @@ public boolean mapFromUint32ToFloat64(			uint32			uint32InValue,
 	{	// everything fine so far, so put out the mapped value in the out parameter
 		swap( float64OutValue, _xD );
 	}
-	else
-	{
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
-	}
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \mapFromUint32ToFloat64 ###
@@ -915,8 +818,8 @@ public boolean mapFromInt16ToFloat64(			int16			int16InValue,
 
 	// const:
 	// source range
-			int32	MIN_R = (int32)MIN_I;
-			int32	MAX_R = (int32)MAX_I;
+	int32	MIN_R = (int32)MIN_I;
+	int32	MAX_R = (int32)MAX_I;
 
 	// vars:
 	// input value
@@ -925,30 +828,26 @@ public boolean mapFromInt16ToFloat64(			int16			int16InValue,
 	// output value
 	mutable float64	_xD = 0.0fw;
 
-
 	mutable boolean ret = true;
-
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue );
 
 	// is int16InValue within error-on-purpose list?
 	if( has( ERROR_I, int16InValue ) )
 	{	// int16InValue is within error-on-purpose list
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is in ERROR_I = " + (rstring)ERROR_I );
 		ret = false;
 	}
 
 	// is int16InValue out of range (too small)
 	if( ret && ( int16InValue < MIN_I ) )
 	{	// int16InValue is too small
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is less than MIN_I = " + (rstring)MIN_I );
 		ret = false;
 	}
 
 	// is int16InValue out of range (too big)
 	if( ret && ( int16InValue > MAX_I ) )
 	{	// int16InValue is too big
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received int16InValue = " + (rstring)int16InValue + " is greater than MAX_I = " + (rstring)MAX_I );
 		ret = false;
 	}
 
@@ -966,13 +865,13 @@ public boolean mapFromInt16ToFloat64(			int16			int16InValue,
 	{	// regular case of target range limits (e.g. ascending -x ... +x)
 		if( _xD < MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
 			ret = false;
 		}
 
 		if( ret && _xD > MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
 			ret = false;
 		}
 	}
@@ -980,13 +879,13 @@ public boolean mapFromInt16ToFloat64(			int16			int16InValue,
 	{	// reverse case of target range limits (e.g. descending +x ... -x)
 		if( _xD > MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
 			ret = false;
 		}
 
 		if( ret && _xD < MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
 			ret = false;
 		}
 	}
@@ -996,12 +895,6 @@ public boolean mapFromInt16ToFloat64(			int16			int16InValue,
 	{	// everything fine so far, so put out the mapped value in the out parameter
 		swap( float64OutValue, _xD );
 	}
-	else
-	{
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
-	}
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \mapFromInt16ToFloat64 ###
@@ -1044,8 +937,8 @@ public boolean mapFromUint16ToFloat64(			uint16			uint16InValue,
 
 	// const:
 	// source range
-			uint32	MIN_R = (uint32)MIN_I;
-			uint32	MAX_R = (uint32)MAX_I;
+	uint32	MIN_R = (uint32)MIN_I;
+	uint32	MAX_R = (uint32)MAX_I;
 
 	// vars:
 	// input value
@@ -1054,29 +947,26 @@ public boolean mapFromUint16ToFloat64(			uint16			uint16InValue,
 	// output value
 	mutable float64	_xD = 0.0fw;
 
-
 	mutable boolean ret = true;
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue );
 
 	// is uint16InValue within error-on-purpose list?
 	if( has( ERROR_I, uint16InValue ) )
 	{	// uint16InValue is within error-on-purpose list
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is in ERROR_I = " + (rstring)ERROR_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is in ERROR_I = " + (rstring)ERROR_I );
 		ret = false;
 	}
 
 	// is uint16InValue out of range (too small)
 	if( ret && ( uint16InValue < MIN_I ) )
 	{	// uint16InValue is too small
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is less than MIN_I = " + (rstring)MIN_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is less than MIN_I = " + (rstring)MIN_I );
 		ret = false;
 	}
 
 	// is uint16InValue out of range (too big)
 	if( ret && ( uint16InValue > MAX_I ) )
 	{	// uint16InValue is too big
-		appTrc( Trace.error, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is greater than MAX_I = " + (rstring)MAX_I );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** received uint16InValue = " + (rstring)uint16InValue + " is greater than MAX_I = " + (rstring)MAX_I );
 		ret = false;
 	}
 
@@ -1094,13 +984,13 @@ public boolean mapFromUint16ToFloat64(			uint16			uint16InValue,
 	{	// regular case of target range limits (e.g. ascending x0 ... xn)
 		if( _xD < MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MIN_F " + (rstring)MIN_F );
 			ret = false;
 		}
 
 		if( ret && _xD > MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MAX_F " + (rstring)MAX_F );
 			ret = false;
 		}
 	}
@@ -1108,13 +998,13 @@ public boolean mapFromUint16ToFloat64(			uint16			uint16InValue,
 	{	// reverse case of target range limits (e.g. descending xn ... x0)
 		if( _xD > MIN_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is greater than MIN_F " + (rstring)MIN_F + " (descending range)" );
 			ret = false;
 		}
 
 		if( ret && _xD < MAX_F )
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** _xD = " + (rstring)_xD + " is less than MAX_F " + (rstring)MAX_F + " (ascending range)" );
 			ret = false;
 		}
 	}
@@ -1124,80 +1014,9 @@ public boolean mapFromUint16ToFloat64(			uint16			uint16InValue,
 	{	// everything fine so far, so put out the mapped value in the out parameter
 		swap( float64OutValue, _xD );
 	}
-	else
-	{
-		appTrc( Trace.warn, FUNCTION_NAME + ": *** something went wrong - mutable out value float64OutValue = " + (rstring)float64OutValue + " kept unmodified." );
-	}
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \mapFromUint16ToFloat64 ###
-
-
-// ################################################################################################################################################################################
-
-/**
- * This function returns the arc tangent of the two numbers x and y.
- * It is similar to calculating atan( y / x ), except that the signs
- * of both arguments are used to determine the quadrant of the result.
- * The result is an angle expressed in radians and will be within the
- * range of \[-PI()..PI()\], rather than for just atan(), which uses a
- * range of \[-PI()/2..PI()/2\] instead of.
- * The following cases are considered:
- * * `x > 0				=> atan( y / x )`
- * * `x < 0 && y >= 0	=> atan( y / x ) + PI()`
- * * `x < 0 && y < 0	=> atan( y / x ) - PI()`
- * * `x = 0 && y > 0	=> +PI() / 2`
- * * `x = 0 && y < 0	=> -PI() / 2`
- * * `x = 0 && y = 0	=> nanl()`
- * @param y float64 containing the y value (vertical value) 
- * @param x float64 containing the x value (horizontal value)
- * @return atan2 float64 arc tangent of x and y in rad within range -PI()..PI()   
- */
-public float64 atan2(
-						float64	y,	// y coordinate
-						float64	x	// x coordinate
-					)
-{
-	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_ATAN2";
-
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received y: " + (rstring)y );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received x: " + (rstring)x );
-	}
-
-	mutable float64	ret = nanl();
-//	mutable	float64 _a = nanl();
-
-	if( 0.0fl < x )
-	{	// x > 0
-		ret = atan( y / x );
-	}
-	else
-	{	// x <= 0
-		if( 0.0fl > x )
-		{	// x < 0
-			ret = 0.0fl <= y ? atan( y / x ) + PI() : atan( y / x ) - PI();
-		}
-		else
-		{	// x = 0
-			if( 0.0fl != y )
-			{	// y < 0 || y > 0
-				ret = 0.0fl < y ? PI() / 2.0fl : PI() / -2.0fl;
-			}
-//			else
-//			{	// y = 0
-//				ret = nanl();
-//			}
-		}
-	}
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
-	return ret;
-}
-// ### \atan2 ###
 
 
 // ################################################################################################################################################################################
@@ -1226,26 +1045,17 @@ public boolean isMatrixDimensionValid(
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_ISMATRIXDIMENSIONVALID";
 
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A: " + (rstring)A );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received number of expected rows            r: " + (rstring)r );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received number of expected columns per row c: " + (rstring)r );
-	}
-
 	mutable boolean	ret = true;
 
 	mutable int32 _rA = size( A );	// rows, first index
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _rA: " + (rstring)_rA );
-
 
 	// only continue, if expected number of rows is greater than zero
 	if( ret
 		&& ( 1 > r )
 		)
 	{
-		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of expected rows    r: " + (rstring)r );
+		// make an error trace because this is most probably a program error
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of expected rows    r: " + (rstring)r + " *** A: " + (rstring)A);
 		ret = false;
 	}
 
@@ -1254,7 +1064,8 @@ public boolean isMatrixDimensionValid(
 		&& ( 1 > c )
 		)
 	{
-		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of expected columns c: " + (rstring)c );
+		// make an error trace because this is most probably a program error
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of expected columns c: " + (rstring)c + " *** A: " + (rstring)A);
 		ret = false;
 	}
 
@@ -1264,7 +1075,7 @@ public boolean isMatrixDimensionValid(
 		&& ( r != _rA )
 		)
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** number of rows in matrix _rA: " + (rstring)_rA + " does not match expectation r: " + (rstring)r );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** number of rows in matrix _rA: " + (rstring)_rA + " does not match expectation r: " + (rstring)r + " *** A: " + (rstring)A);
 		ret = false;
 	}
 
@@ -1277,7 +1088,7 @@ public boolean isMatrixDimensionValid(
 		{
 			if( size( RA ) != c )
 			{
-				if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** number of columns in matrix _cA(row " + (rstring)i + "): " + (rstring)size( RA ) + " does not match expectation c: " + (rstring)c );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** number of columns in matrix _cA(row " + (rstring)i + "): " + (rstring)size( RA ) + " does not match expectation c: " + (rstring)c + " *** A: " + (rstring)A);
 				ret = false;
 				break;
 			}
@@ -1288,7 +1099,6 @@ public boolean isMatrixDimensionValid(
 		}
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \isMatrixDimensionValid ###
@@ -1315,12 +1125,6 @@ public boolean multiplyMatrices(
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_MULTIPLYMATRICES";
 
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 1st matrix A: " + (rstring)A );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 2nd matrix B: " + (rstring)B );
-	}
-
 	mutable boolean	ret = true;
 
 	mutable int32 _zA = size( A );	// rows, first index
@@ -1333,19 +1137,13 @@ public boolean multiplyMatrices(
 	mutable list<float64>	_cRow = (list<float64>)[];			// buffer row
 	mutable float64		_c = 0.0fl;								// buffer column element of recent row
 
-
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** _zA: " + (rstring)_zA );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** _zB: " + (rstring)_zB );
-	}
-
 	// only continue, if A has at least one row
 	if( ret
 		&& ( 0 >= _zA )
 		)
 	{
-		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of rows _zA: " + (rstring)_zA );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of rows _zA: " + (rstring)_zA
+			+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 		ret = false;
 	}
 
@@ -1354,7 +1152,8 @@ public boolean multiplyMatrices(
 		&& ( 0 >= _zB )
 		)
 	{
-		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of rows _zB: " + (rstring)_zB );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of rows _zB: " + (rstring)_zB
+			+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 		ret = false;
 	}
 
@@ -1366,7 +1165,8 @@ public boolean multiplyMatrices(
 
 		if( _sA != _zB )
 		{	// number of columns of A's first row does not match number of rows of B!
-			appTrc( Trace.error, FUNCTION_NAME + ": *** number of colums _sA(row 0): " + (rstring)_sA + " does not match number of rows _zB: " + (rstring)_zB );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** number of colums _sA(row 0): " + (rstring)_sA + " does not match number of rows _zB: " + (rstring)_zB
+				+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 			ret = false;
 		}
 
@@ -1380,7 +1180,8 @@ public boolean multiplyMatrices(
 				{
 					if( size( ZA ) != _sA )
 					{
-						appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sA(row " + (rstring)i + "): " + (rstring)size( ZA ) );
+						if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of colums _sA(row " + (rstring)i + "): " + (rstring)size( ZA )
+							+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 						ret = false;
 						break;
 					}
@@ -1392,7 +1193,8 @@ public boolean multiplyMatrices(
 			}
 			else
 			{
-				appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sA(row 0): " + (rstring)_sA );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of colums _sA(row 0): " + (rstring)_sA
+					+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 				ret = false;
 			}
 		}
@@ -1412,7 +1214,8 @@ public boolean multiplyMatrices(
 			{
 				if( size( ZB ) != _sB )
 				{
-					appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sB(row " + (rstring)i + "): " + (rstring)size( ZB ) );
+					if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of colums _sB(row " + (rstring)i + "): " + (rstring)size( ZB )
+						+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 					ret = false;
 					break;
 				}
@@ -1424,16 +1227,14 @@ public boolean multiplyMatrices(
 		}
 		else
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid number of colums _sB(row 0): " + (rstring)_sB );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of colums _sB(row 0): " + (rstring)_sB
+				+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 			ret = false;
 		}
 	}
 
 	if( ret )
 	{	// finally, we can be sure, matrices are valid and multiplication should work, so let's do it ...
-
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** _sA: " + (rstring)_sA );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** _sB: " + (rstring)_sB );
 
 		for( int32 _z in range( 0, _zA ) )
 		{	// construct row by row
@@ -1458,7 +1259,6 @@ public boolean multiplyMatrices(
 		swap( C, _C );
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \multiplyMatrices ###
@@ -1492,12 +1292,6 @@ public boolean scalarProduct(
 							)
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_SCALARPRODUCT";
-
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 1st matrix A: " + (rstring)A );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received 2nd matrix B: " + (rstring)B );
-	}
 
 	mutable boolean	ret = true;
 
@@ -1542,14 +1336,16 @@ public boolean scalarProduct(
 					}
 					else
 					{
-						if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** dimensions not compatible - _zA: " + (rstring)_zA + ", _sA: " + (rstring)_sA + ", _zB: " + (rstring)_zB + ", _sB: " + (rstring)_sB  );
+						if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** dimensions not compatible - _zA: " + (rstring)_zA + ", _sA: " + (rstring)_sA + ", _zB: " + (rstring)_zB + ", _sB: " + (rstring)_sB
+							+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 						ret = false;
 					}
 				}
 			}
 			else
 			{
-				appTrc( Trace.error, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " does not match columns _sB: " + (rstring)_sB );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " does not match columns _sB: " + (rstring)_sB
+					+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 				ret = false;
 			}
 		}
@@ -1581,20 +1377,23 @@ public boolean scalarProduct(
 						}
 						else
 						{
-							if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** dimensions not compatible - _zA: " + (rstring)_zA + ", _sA: " + (rstring)_sA + ", _zB: " + (rstring)_zB + ", _sB: " + (rstring)_sB  );
+							if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** dimensions not compatible - _zA: " + (rstring)_zA + ", _sA: " + (rstring)_sA + ", _zB: " + (rstring)_zB + ", _sB: " + (rstring)_sB
+								+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 							ret = false;
 						}
 					}
 				}
 				else
 				{
-					appTrc( Trace.error, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " does not match rows _zB: " + (rstring)_zB );
+					if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** columns _sA: " + (rstring)_sA + " does not match rows _zB: " + (rstring)_zB
+						+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 					ret = false;
 				}
 			}
 			else
 			{
-				appTrc( Trace.error, FUNCTION_NAME + ": *** rows _zA: " + (rstring)_zA + " does not match columns _sB: " + (rstring)_sB );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** rows _zA: " + (rstring)_zA + " does not match columns _sB: " + (rstring)_sB
+					+ " *** A: " + (rstring)A + " *** B: " + (rstring)B);
 				ret = false;
 			}
 		}
@@ -1604,10 +1403,8 @@ public boolean scalarProduct(
 	{	// if still successfull, we have a valid scalar product value in _p
 		// so we go ahead and swap it into s
 		swap( s , _p );
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** assigned s = " + (rstring)s );
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \scalarProduct ###
@@ -1641,19 +1438,16 @@ public boolean getMatrixDimension(
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_GETMATRIXDIMENSION";
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A: " + (rstring)A );
-
 	mutable boolean	ret = true;
 
 	mutable int32 _rA = size( A );	// number of rows (first index in the list of lists)
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _rA: " + (rstring)_rA );
 
 	// only continue, if number of rows is greater than zero
 	if( ret
 		&& ( 1 > _rA )
 		)
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** invalid number of rows (less than 1) in matrix _rA: " + (rstring)_rA );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of rows (less than 1) in matrix _rA: " + (rstring)_rA + " *** A: " + (rstring)A);
 		ret = false;
 	}
 
@@ -1666,7 +1460,7 @@ public boolean getMatrixDimension(
 		// only continue, if number of columns in first row is greater than zero
 		if( 1 > _cA )
 		{
-			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** invalid number of columns (less than 1) in matrix _cA(row 0): " + (rstring)_cA );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid number of columns (less than 1) in matrix _cA(row 0): " + (rstring)_cA + " *** A: " + (rstring)A);
 			ret = false;
 		}
 
@@ -1677,7 +1471,7 @@ public boolean getMatrixDimension(
 			{
 				if( size( RA ) != _cA )
 				{
-					if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** number of columns in matrix _cA(row " + (rstring)i + "): " + (rstring)size( RA ) + " does not match number of columns _cA(row 0): " + (rstring)_cA );
+					if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** number of columns in matrix _cA(row " + (rstring)i + "): " + (rstring)size( RA ) + " does not match number of columns _cA(row 0): " + (rstring)_cA + " *** A: " + (rstring)A);
 					ret = false;
 					break;
 				}
@@ -1692,16 +1486,10 @@ public boolean getMatrixDimension(
 				// so fill in the number of rows and columns to the mutable out parameters
 				swap( r, _rA );
 				swap( c, _cA );
-				if ( isTraceable( Trace.trace ) )
-				{
-					appTrc( Trace.trace, FUNCTION_NAME + ": *** number of rows in matrix A            r: " + (rstring)r );
-					appTrc( Trace.trace, FUNCTION_NAME + ": *** number of columns per row in matrix A c: " + (rstring)c );
-				}
 			}
 		}
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \getMatrixDimension ###
@@ -1734,12 +1522,6 @@ public boolean getMatrixRow(
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_GETMATRIXROW";
 
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A:    " + (rstring)A );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received row index r: " + (rstring)r );
-	}
-
 	mutable boolean	ret = true;
 
 	// only continue, if r is in range
@@ -1747,7 +1529,8 @@ public boolean getMatrixRow(
 		&& ( 0 > r )
 		)
 	{
-		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid value (0.. allowed) r: " + (rstring)r );
+		// make an error trace because this is most probably a program error
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid value (0.. allowed) r: " + (rstring)r + " *** A: " + (rstring)A);
 		ret = false;
 	}
 
@@ -1774,17 +1557,16 @@ public boolean getMatrixRow(
 			}
 			else
 			{
-				appTrc( Trace.error, FUNCTION_NAME + ": *** invalid row index r: " + (rstring)r + " must be less than _r: " + (rstring)_r );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid row index r: " + (rstring)r + " must be less than _r: " + (rstring)_r + " *** A: " + (rstring)A);
 				ret = false;
 			}
 		}
 		else
 		{	// could not evaluate dimension of matrix A, seems to be invalid...
-			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
 		}
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \getMatrixRow ###
@@ -1817,12 +1599,6 @@ public boolean getMatrixColumn(
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_GETMATRIXCOLUMN";
 
-	if ( isTraceable( Trace.trace ) )
-	{
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A:       " + (rstring)A );
-		appTrc( Trace.trace, FUNCTION_NAME + ": *** received column index c: " + (rstring)c );
-	}
-
 	mutable boolean	ret = true;
 
 
@@ -1831,7 +1607,8 @@ public boolean getMatrixColumn(
 		&& ( 0 > c )
 		)
 	{
-		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid value (0.. allowed) c: " + (rstring)c );
+		// make an error trace because this is most probably a program error
+		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid value (0.. allowed) c: " + (rstring)c + " *** A: " + (rstring)A);
 		ret = false;
 	}
 
@@ -1866,18 +1643,17 @@ public boolean getMatrixColumn(
 			}
 			else
 			{
-				appTrc( Trace.error, FUNCTION_NAME + ": *** invalid column index c: " + (rstring)c + " must be less than _c: " + (rstring)_c );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid column index c: " + (rstring)c + " must be less than _c: " + (rstring)_c + " *** A: " + (rstring)A);
 				ret = false;
 			}
 		}
 		else
 		{	// could not evaluate dimension of matrix A, seems to be invalid...
-			appTrc( Trace.error, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
 		}
 
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \getMatrixColumn ###
@@ -1907,8 +1683,6 @@ public boolean transposeMatrix(
 								)
 {
 	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_TRANSPOSEMATRIX";
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received matrix A:       " + (rstring)A );
 
 	mutable boolean	ret = true;
 
@@ -1941,10 +1715,9 @@ public boolean transposeMatrix(
 	}
 	else
 	{	// could not evaluate dimension of matrix A, seems to be invalid...
-		appTrc( Trace.error, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
+		if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** invalid matrix A: " + (rstring)A );
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 // ### \transposeMatrix ###
@@ -2009,40 +1782,32 @@ public boolean convertToBoolean(	rstring booleanInString,
 			"F"
 		];
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received booleanInString = " + booleanInString );
-
 	// check if input is empty and for the case, this is allowed, assign default value
 	if( 1 > length( booleanInString ) )
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** booleanInString is empty" );
 		if( true == allowEmpty )
 		{
-			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** allowEmpty = true" );
 			_bool = default;
 			ret = true;
 		}
 		else
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** allowEmpty = false and booleanInString is empty!" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** allowEmpty = false and booleanInString is empty!" );
 		}
 	}
 	else
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** booleanInString is NOT empty" );
 		if( strictParsing )
 		{
-			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = true" );
 			_inStr = booleanInString;
 		}
 		else
 		{
-			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = false" );
 			_inStr = lower( trim( booleanInString, " \t" ) );
 		}
 
 		if( _inStr in trueElements )
 		{
-			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _inStr = " + (rstring)_inStr + " found in trueElements" );
 			_bool = true;
 			ret = true;
 		}
@@ -2050,24 +1815,21 @@ public boolean convertToBoolean(	rstring booleanInString,
 		{
 			if( _inStr in falseElements )
 			{
-				if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _inStr = " + (rstring)_inStr + " found in falseElements" );
 				_bool = false;
 				ret = true;
 			}
 			else
 			{
-				if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _inStr = " + (rstring)_inStr + " not found in trueElements or falseElements" );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _inStr = " + (rstring)_inStr + " not found in trueElements or falseElements" );
 			}
 		}
 	}
 
 	if( ret )
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** booleanInString completely successful parsed" );
 		swap( _bool, booleanOutValue );
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 
@@ -2101,66 +1863,54 @@ public boolean convertToFloat64(	rstring floatInString,
 	mutable float64 _number = 0.0;
 	mutable int32	_bytes = 0;
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received floatInString = " + floatInString );
-
 	// check if input is empty and for the case, this is allowed, assign default value
 	if( 1 > length( floatInString ) )
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** floatInString is empty" );
 
 		if( true == allowEmpty )
 		{
-			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** allowEmpty = true" );
 			floatOutValue = default;
 			ret = true;
 		}
 		else
 		{
-			appTrc( Trace.error, FUNCTION_NAME + ": *** allowEmpty = false and floatInString is empty!" );
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** allowEmpty = false and floatInString is empty! *** floatInString: " + floatInString);
 		}
 	}
 	else
 	{
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** floatInString is NOT empty" );
 
 		_bytes = parseNumber( _number, floatInString );
-		if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** _bytes = " + (rstring)_bytes );
 
 		if( 0 <= _bytes )
 		{
-			if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** 0 <= _bytes" );
 			if( ( min <= _number ) && ( max >= _number ) )
 			{
-				if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** " + (rstring)min + " <= " + (rstring)_number + " <= " + (rstring)max );
 				if( true == strictParsing )
 				{
-					if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = true" );
 					if( length( floatInString ) == _bytes )
 					{
-						if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** floatInString completely successful parsed" );
 						swap( _number, floatOutValue );
 						ret = true;
 					}
 					else
 					{
-						if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** floatInString partly parsed only" );
+						if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** floatInString partly parsed only *** floatInString: " + floatInString);
 					}
 				}
 				else
 				{
-					if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** strictParsing = false" );
 					swap( _number, floatOutValue );
 					ret = true;
 				}
 			}
 			else
 			{
-				appTrc( Trace.error, FUNCTION_NAME + ": *** " + (rstring)_number + " is not in range [" + (rstring)min + " .. " + (rstring)max + "]" );
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** " + (rstring)_number + " is not in range [" + (rstring)min + " .. " + (rstring)max + "] *** floatInString: " + floatInString);
 			}
 		}
 	}
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 
 }
@@ -2188,10 +1938,6 @@ public boolean convertToInt64(		rstring intInString,
 									int64	max,
 									mutable int64 intOutValue )
 {
-	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_CONVERTTOINT64";
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received intInString = " + intInString );
-
 	mutable boolean ret = false;
 
 	mutable float64 out = 0.0;
@@ -2204,7 +1950,6 @@ public boolean convertToInt64(		rstring intInString,
 							out );
 	intOutValue = (int64)out;
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 
@@ -2231,10 +1976,6 @@ public boolean convertToUint32(		rstring intInString,
 									uint32	max,
 									mutable uint32 intOutValue )
 {
-	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_CONVERTTOUINT32";
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received intInString = " + intInString );
-
 	mutable boolean ret = false;
 
 	mutable float64 out = 0.0;
@@ -2247,7 +1988,6 @@ public boolean convertToUint32(		rstring intInString,
 							out );
 	intOutValue = (uint32)out;
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 
@@ -2274,10 +2014,6 @@ public boolean convertToUint8(		rstring intInString,
 									uint8	max,
 									mutable uint8 intOutValue )
 {
-	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_CONVERTTOUINT8";
-
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** received intInString = " + intInString );
-
 	mutable boolean ret = false;
 
 	mutable float64 out = 0.0;
@@ -2290,7 +2026,6 @@ public boolean convertToUint8(		rstring intInString,
 							out );
 	intOutValue = (uint8)out;
 
-	if ( isTraceable( Trace.trace ) ) appTrc( Trace.trace, FUNCTION_NAME + ": *** leave function, ret = " + (rstring)ret );
 	return ret;
 }
 
