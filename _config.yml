@@ -16,7 +16,7 @@ baseurl                  : "/streamsx.math" # the subpath of your site, e.g. "/b
 repository               : "IBMStreams/streamsx.math" # GitHub username/repo-name
 github_base_url          : "https://github.com" # your github server, will differ when enterprise github
 github_editme_path       : https://github.com/IBMStreams/streamsx.math/blob/gh-pages
-spldoc_path              : &default_cta_url "/spldoc/html"
+spldoc_path              : &default_cta_url "/doc/spldoc/html"
 toolkit_excerpt          : &default_excerpt "Mathematics and statistics toolkit"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
