@@ -11,3 +11,8 @@ Mathematics and statistics toolkit.
 ## Namespace: com.ibm.streamsx.math.std
 
 This namespace contains definitions for numerical functions from the c++ standard library.
+
+## Namespace: com.ibm.streamsx.math.common
+
+This namespace contains o number of special conversion functions, matrix manipulation and transformation.
+

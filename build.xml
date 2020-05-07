@@ -33,7 +33,7 @@
 	<property name="samples.dir"        value="samples"/>
 	<property name="samples.doc.dir"    value="samples/${doc.string}/spldoc"/>
 
-	<property name="test.dir"           location="tests/frameworktests"/>
+	<property name="test.dir"           location="tests/frameworktest"/>
 
 	<property name="release.dir"        location="releases"/>
 	<property name="release.info.file"  value="${toolkit.dir}/build.info"/>
