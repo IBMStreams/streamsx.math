@@ -1,0 +1,31 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite Main {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					list<list<float64>> x   = [[0.0, 1.0, 2.0], [ 3.0, 4.0, 5.0]];
+					//<row>list<list<float64>> expec = [[3.0, 4.0, 5.0]];
+					//<column>list<list<float64>> expec = [[1.0], [4.0]];
+					//<transp>list<list<float64>> expec = [[0.0,3.0],[1.0,4.0],[2.0,5.0]];
+					boolean expecr = true;
+					
+					mutable list<list<float64>> y = [];
+					//<row>boolean r = getMatrixRow(x, 1, y);
+					//<column>boolean r = getMatrixColumn(x, 1, y);
+					//<transp>boolean r = transposeMatrix(x, y);
+					
+					//<row>rstring func = "getMatrixRow";
+					//<column>rstring func = "getMatrixColumn";
+					//<transp>rstring func = "transposeMatrix";
+					printStringLn(func + " returns " + (rstring)r + " y=" + (rstring)y);
+					printStringLn("expecr =" + (rstring)expecr);
+					if (r != expecr) abort();
+					if (y != expec) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

@@ -1,0 +1,26 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite Main {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<norm>list<list<float64>> x   = [[0.0, 1.0, 2.0], [ 3.0, 4.0, 5.0]];
+					//<f1>list<list<float64>>   x   = [[0.0, 1.0, 2.0]];
+					//<f2>list<list<float64>>   x   = [[0.0, 1.0], [ 3.0, 4.0]];
+					//<f3>list<list<float64>>   x   = [[0.0, 1.0, 2.0], [ 3.0, 4.0, 5.0, 6.0]];
+					
+					//<norm>boolean expecr = true;
+					//<f*>boolean expecr = false;
+					
+					boolean r = isMatrixDimensionValid(x, 2, 3);
+					
+					printStringLn("isMatrixDimensionValid returns " + (rstring)r);
+					printStringLn("expecr =" + (rstring)expecr);
+					if (r != expecr) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

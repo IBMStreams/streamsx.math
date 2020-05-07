@@ -28,12 +28,12 @@
 	<property name="doc.dir"            value="${doc.string}/spldoc"/>
 	<property name="doc.dir.old"        value="${toolkit.dir}/${doc.string}"/>
 	<property name="tktitle"            value="Mathematics and statistics toolkit" />
-	<!-- <property name="tkauthor"           value="github team" /> -->
+	<property name="tkauthor"           value="IBMStreams Open Source Community at GitHub - https://github.com/IBMStreams/${ant.project.name}" />
 
 	<property name="samples.dir"        value="samples"/>
 	<property name="samples.doc.dir"    value="samples/${doc.string}/spldoc"/>
 
-	<property name="test.dir"           location="tests/frameworktests"/>
+	<property name="test.dir"           location="tests/frameworktest"/>
 
 	<property name="release.dir"        location="releases"/>
 	<property name="release.info.file"  value="${toolkit.dir}/build.info"/>
@@ -52,7 +52,7 @@
 		description="Build the toolkit index and the doc. This is compatibility target for production">
 	</target>
 	
-	<target name="clean" depends="spldoc-clean,samples-clean,toolkit-clean,releaseinfo-clean"
+	<target name="clean" depends="spldoc-clean,samples-clean,cpp-clean,toolkit-clean,releaseinfo-clean"
 		description="Clean up generated toolkit artifacts, spldoc and samples">
 		<delete dir="${out.dir}"/>
 	</target>
@@ -61,7 +61,7 @@
 		description="Clean up generated toolkit artifacts, spldoc, samples and remove libraries from toolkit directory">
 	</target>
 
-	<target name="toolkit" depends="requirements"
+	<target name="toolkit" depends="cpp"
 		description="Build the toolkit index and all dependencies">
 		<exec executable="${spl-mt}" failonerror="true">
 			<arg value="--directory"/>
@@ -90,13 +90,25 @@
 		<delete dir="${inc.dir}"/>
 	</target>
 
+	<target name="cpp" depends="requirements"
+		description="Build the cpp library">
+		<exec executable="make" dir="${impl.dir}"/>
+	</target>
+	
+	<target name="cpp-clean" depends="requirements"
+		description="Clean up the cpp library">
+		<exec executable="make" dir="${impl.dir}">
+			<arg value="clean"/>
+		</exec>
+	</target>
+	
 	<target name="spldoc" depends="toolkit"
 		description="Generate the toolkit documentation">
 		<echo message="Tookit spldoc to: ${doc.dir}"/>
 		<exec executable="${spl-md}" failonerror="true">
 			<arg value="--include-composite-operator-diagram" />
-			<!-- <arg value="\-\-author" />
-			<arg value="${tkauthor}" /> -->
+			<arg value="--author" />
+			<arg value="${tkauthor}" />
 			<arg value="--doc-title" />
 			<arg value="${tktitle}" />
 			<arg value="--directory" />
@@ -146,22 +158,21 @@
 			<arg value="-c"/>
 			<arg value="shopt -s nullglob; for x in samples/*/info.xml; do echo -n ${x%/*};  echo -n : ; done"/>
 		</exec>
-		<echo message="All samples to SPLDOC: ${samples.list}"/>
-		<!-- re-enable the target when samples are there. And remove backslashes ! 
+		<echo message="All samples list is: ${samples.list}"/>
 		<exec executable="${spl-md}" failonerror="true">
-			<arg value="\-\-include-composite-operator-diagram"/>
-			<arg value="\-\-author"/>
+			<arg value="--include-composite-operator-diagram"/>
+			<arg value="--author"/>
 			<arg value="${tkauthor}"/>
-			<arg value="\-\-doc-title"/>
+			<arg value="--doc-title"/>
 			<arg value="${tktitle} samples"/>
-			<arg value="\-\-toolkit-path"/>
+			<arg value="--toolkit-path"/>
 			<arg value="${samples.list}"/>
-			<arg value="\-\-warn-no-comments"/>
-			<arg value="\-\-check-tags"/>
-			<arg value="\-\-include-source"/>
-			<arg value="\-\-output-directory"/>
+			<arg value="--warn-no-comments"/>
+			<arg value="--check-tags"/>
+			<arg value="--include-source"/>
+			<arg value="--output-directory"/>
 			<arg value="${samples.doc.dir}"/>
-		</exec> -->
+		</exec>
 	</target>
 	
 	<target name="build-sample-target">
@@ -219,13 +230,21 @@
 		<antcall target="spldoc-samples"/>
 		<antcall target="samples-clean"/>
 		<mkdir dir="${release.dir}"/>
+		<!-- get os type string -->
+		<property name="osVersion" value="${os.version}"/>
+		<condition property="osPlat" value="el7">
+			<contains string="${osVersion}" substring="el7" casesensitive="false"/>
+		</condition>
+		<condition property="osPlat" value="el6">
+			<contains string="${osVersion}" substring="el6" casesensitive="false"/>
+		</condition>
 		<!-- Extract the short git commit hash -->
 		<exec executable="git" outputproperty="commithash">
 			<arg value="rev-parse" />
 			<arg value="--short" />
 			<arg value="HEAD" />
 		</exec>
-		<property name="releasefilename" value="${release.dir}/${ant.project.name}-${toolkit.version}-${commithash}-${DSTAMP}-${TSTAMP}.tgz"/>
+		<property name="releasefilename" value="${release.dir}/${ant.project.name}-${toolkit.version}-${osPlat}-${os.arch}-${commithash}-${DSTAMP}-${TSTAMP}.tgz"/>
 		<echo message="Make releasefile Toolkit Version: ${toolkit.version} ${commithash} : ${releasefilename}"/>
 		<!-- must use the tar command because the tar target handles symbolic links incorrect -->
 		<exec executable="tar" failonerror="true">
@@ -242,7 +261,10 @@
 			<arg value="--exclude=${toolkit.dir}/build.xml"/>
 			<arg value="--exclude=${toolkit.dir}/pom.xml"/>
 			<arg value="--exclude=${toolkit.dir}/.cproject"/>
-			<arg value="--exclude=${toolkit.dir}/impl/java/*"/>
+			<arg value="--exclude=${toolkit.dir}/impl/java"/>
+			<arg value="--exclude=${toolkit.dir}/impl/Makefile"/>
+			<arg value="--exclude=${toolkit.dir}/impl/obj"/>
+			<arg value="--exclude=${toolkit.dir}/impl/src"/>
 			<arg value="${toolkit.dir}/"/>
 			<arg value="${samples.dir}/"/>
 			<arg value="${doc.string}/"/>

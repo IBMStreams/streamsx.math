@@ -1,0 +1,55 @@
+public composite StdFuncSimple2 {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<*32>float32 one = 1.0w;
+					//<*64>float64 one = 1.0l;
+					//<*32>float32 two = 2.0w;
+					//<*64>float64 two = 2.0l;
+					//<*32>float32 four = 4.0w;
+					//<*64>float64 four = 4.0l;
+					//<*32>float32 eight = 8.0w;
+					//<*64>float64 eight = 8.0l;
+					//<*32>float32 ten = 10.0w;
+					//<*64>float64 ten = 10.0l;
+					//<*32>float32 e = 2.718281828w;
+					//<*64>float64 e = 2.718281828l;
+					
+					//<*32>mutable float32 y = 0.0;
+					//<*64>mutable float64 y = 0.0;
+					//<*32>mutable float32 x = 0.0;
+					//<*64>mutable float64 x = 0.0;
+					//<exp_*>x = one; y = com.ibm.streamsx.math.std::exp(x);
+					//<exp2_*>x = one; y = com.ibm.streamsx.math.std::exp2(x);
+					//<log_*>x = e; y = com.ibm.streamsx.math.std::log(x);
+					//<log2_*>x = two; y = com.ibm.streamsx.math.std::log2(x);
+					//<log10_*>x = ten; y = com.ibm.streamsx.math.std::log10(x);
+					//<sqrt_*>x = four; y = com.ibm.streamsx.math.std::sqrt(x);
+					//<cbrt_*>x = eight; y = com.ibm.streamsx.math.std::cbrt(x);
+					
+					//<exp_*>float64 expec = 2.718281828l;
+					//<exp2_*>float64 expec = 2.0l;
+					//<log_*>float64 expec = 1.0l;
+					//<log2_*>float64 expec = 1.0l;
+					//<log10_*>float64 expec = 1.0l;
+					//<sqrt_*>float64 expec = 2.0l;
+					//<cbrt_*>float64 expec = 2.0l;
+					float64 diff = (float64)y - expec;
+					
+					rstring func =
+					//<exp_*>"exp";
+					//<exp2_*>"exp2";
+					//<log_*>"log";
+					//<log2_*>"log2";
+					//<log10_*>"log10";
+					//<sqrt_*>"sqrt";
+					//<cbrt_*>"cbrt";
+					printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " diff=" + (rstring)diff);
+					if (abs(diff) > 0.00001l) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

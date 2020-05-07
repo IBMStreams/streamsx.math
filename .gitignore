@@ -11,9 +11,11 @@
 /.project
 
 com.ibm.streamsx.math/.apt_generated
-com.ibm.streamsx.math/output
-com.ibm.streamsx.math/doc
-com.ibm.streamsx.math/bin
+com.ibm.streamsx.math/output/
+com.ibm.streamsx.math/doc/
+com.ibm.streamsx.math/bin/
+com.ibm.streamsx.math/impl/lib/
+com.ibm.streamsx.math/impl/obj/
 com.ibm.streamsx.math/.toolkitList
 com.ibm.streamsx.math/toolkit.xml
 com.ibm.streamsx.math/build.info
@@ -21,12 +23,12 @@ com.ibm.streamsx.math/impl/nl/*.dat
 #com.ibm.streamsx.math/impl/nl/include/Resource.h
 #com.ibm.streamsx.math/impl/nl/include/Resource.pm
 # the language settings are changed all the way, thus must enter these settings via eclipse
-com.ibm.streamsx.sttgateway/.settings/language.settings.xml
+com.ibm.streamsx.math/.settings/language.settings.xml
 
- ignore the toolkit documentation directory.
+# ignore the toolkit documentation directory.
 /doc/spldoc/
 /samples/doc/spldoc/
-/com.ibm.streamsx.sttgateway/doc/
+/com.ibm.streamsx.math/doc/
 
 # ignore release archives
 /releases/

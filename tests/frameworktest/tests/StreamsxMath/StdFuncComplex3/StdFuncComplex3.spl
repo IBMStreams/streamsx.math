@@ -1,0 +1,47 @@
+public composite StdFuncComplex3 {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<arg_32>complex32 x = [1.0, 1.0];
+					//<arg_64>complex64 x = [1.0, 1.0];
+					//<norm_32 conj_32 proj_32>complex32 x = [3.0, 4.0];
+					//<norm_64 conj_64 proj_64>complex64 x = [3.0, 4.0];
+					//<polar_32>float32 x = 1.0w; float32 t = (float32)PI() / 2.0w;
+					//<polar_64>float64 x = 1.0l; float64 t = PI() / 2.0l;
+					//<arg_32 norm_32>mutable float32 y = 0.0;
+					//<arg_64 norm_64>mutable float64 y = 0.0;
+					//<polar_32 proj_32 conj_32 proj_32>mutable complex32 y = [0.0, 0.0];
+					//<polar_64 proj_64 conj_64 proj_64>mutable complex64 y = [0.0, 0.0];
+					//<arg_*>y = com.ibm.streamsx.math.std::arg(x);
+					//<norm_*>y = com.ibm.streamsx.math.std::norm(x);
+					//<polar_*>y = com.ibm.streamsx.math.std::polar(x, t);
+					//<conj_*>y = com.ibm.streamsx.math.std::conj(x);
+					//<proj_*>y = com.ibm.streamsx.math.std::proj(x);
+					
+					//<arg_*>float64 expec = PI() / 4.0;
+					//<norm_*>float64 expec = 25.0;
+					//<arg_* norm_*>float64 diff = (float64)y - expec;
+					//<polar_*>complex64 expec = [0.0, 1.0];
+					//<conj_*>complex64 expec = [3.0, -4.0];
+					//<proj_*>complex64 expec = [3.0, 4.0];
+					//<polar_* conj_* proj_*>complex64 y64 = y;
+					//<polar_* conj_* proj_*>float64 diff = real(y64) - real(expec);
+					//<polar_* conj_* proj_*>float64 diffi = imag(y64) - imag(expec);
+					
+					rstring func =
+					//<arg_*>"arg";
+					//<norm_*>"norm";
+					//<polar_*>"polar";
+					//<conj_*>"conj";
+					//<proj_*>"proj";
+					//<arg_* norm_*>printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " diff=" + (rstring)diff);
+					//<polar_* conj_* proj_*>printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " diff=" + (rstring)diff + " diffi=" + (rstring)diffi);
+					if (abs(diff) > 0.00001l) abort();
+					//<polar_* conj_* proj_*>if (abs(diffi) > 0.00001l) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

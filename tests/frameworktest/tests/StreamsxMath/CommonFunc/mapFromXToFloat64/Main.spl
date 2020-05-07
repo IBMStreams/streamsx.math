@@ -1,0 +1,51 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite Main {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<int32*>list<int32> x   = [    0,    25,    33,    50,    66,    75,    100,          -1,  101];
+					//<uint32*>list<uint32> x = [   0u,   25u,   33u,   50u,   66u,   75u,   100u, 0xffffffffu, 101u];
+					//<int16*>list<int16> x   = [   0h,   25h,   33h,   50h,   66h,   75h,   100h,         -1h, 101h];
+					//<uint16*>list<uint16> x = [  0uh,  25uh,  33uh,  50uh,  66uh,  75uh,  100uh,     0xffffu, 101uh];
+					//<*p>list<float64> expec = [100.0, 350.0,   0.0, 600.0,   0.0, 850.0, 1100.0,         0.0, 0.0];
+					//<*n>list<float64> expec =[-100.0,-350.0,   0.0,-600.0,   0.0,-850.0,-1100.0,         0.0, 0.0];
+					list<boolean>    expecr = [ true,  true, false,  true, false,  true,   true,       false, false];
+					mutable list<float64> y = [];
+					mutable list<boolean> r = [];
+					
+					mutable int32 i = 0;
+					while (i < size(x)) {
+						mutable float64 yx = 0.0;
+						//<int32p>boolean rx = mapFromInt32ToFloat64(x[i], 0, 100, [33,66], 100.0, 1100.0, yx);
+						//<uint32p>boolean rx = mapFromUint32ToFloat64(x[i], 0u, 100u, [33u,66u], 100.0, 1100.0, yx);
+						//<int16p>boolean rx = mapFromInt16ToFloat64(x[i], 0h, 100h, [33h,66h], 100.0, 1100.0, yx);
+						//<uint16p>boolean rx = mapFromUint16ToFloat64(x[i], 0uh, 100uh, [33uh,66uh], 100.0, 1100.0, yx);
+						//<int32n>boolean rx = mapFromInt32ToFloat64(x[i], 0, 100, [33,66], -100.0, -1100.0, yx);
+						//<uint32n>boolean rx = mapFromUint32ToFloat64(x[i], 0u, 100u, [33u,66u], -100.0, -1100.0, yx);
+						//<int16n>boolean rx = mapFromInt16ToFloat64(x[i], 0h, 100h, [33h,66h], -100.0, -1100.0, yx);
+						//<uint16n>boolean rx = mapFromUint16ToFloat64(x[i], 0uh, 100uh, [33uh,66uh], -100.0, -1100.0, yx);
+						appendM(y, yx);
+						appendM(r, rx);
+						++i;
+					}
+
+					//<int32*>rstring func = "mapFromInt32ToFloat64";
+					//<uint32*>rstring func = "mapFromUint32ToFloat64";
+					//<int16*>rstring func = "mapFromInt16ToFloat64";
+					//<uint16*>rstring func = "mapFromUint16ToFloat64";
+					
+					printStringLn(func);
+					printStringLn("y      =" + (rstring)y);
+					printStringLn("expec  =" + (rstring)expec);
+					printStringLn("r      =" + (rstring)r);
+					printStringLn("expecr =" + (rstring)expecr);
+					if (r != expecr) abort();
+					if (y != expec) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

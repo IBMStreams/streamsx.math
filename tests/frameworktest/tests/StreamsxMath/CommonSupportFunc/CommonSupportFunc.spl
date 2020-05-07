@@ -1,0 +1,48 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite CommonSupportFunc {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<uint8ListTo*nt16>list<uint8> x = [0x80u, 0x01u];
+					//<uint8ListTo*nt32>list<uint8> x = [0x80u, 0x03u, 0x02u, 0x01u];
+					//<uint8ListTo*nt64>list<uint8> x = [0x80u, 0x07u, 0x06u, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u];
+					//<uint8ListToFloat32>list<uint8> x = [0x3fu, 0x80u, 0x00u, 0x00u];
+					//<uint8ListToFloat64>list<uint8> x = [0x3fu, 0xf0u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u];
+					//<uint8ListToUint16>uint16 y = uint8ListToUint16(x);
+					//<uint8ListToInt16>  int16 y = uint8ListToInt16(x);
+					//<uint8ListToUint32>uint32 y = uint8ListToUint32(x);
+					//<uint8ListToInt32>  int32 y = uint8ListToInt32(x);
+					//<uint8ListToUint64>uint64 y = uint8ListToUint64(x);
+					//<uint8ListToInt64>  int64 y = uint8ListToInt64(x);
+					//<uint8ListToFloat32>float32 y = uint8ListToFloat32(x);
+					//<uint8ListToFloat64>float64 y = uint8ListToFloat64(x);
+					
+					//<uint8ListToUint16>uint16 expec = 0x8001u;
+					//<uint8ListToInt16>  int16 expec = 0x8001s;
+					//<uint8ListToUint32>uint32 expec = 0x80030201u;
+					//<uint8ListToInt32>  int32 expec = 0x80030201s;
+					//<uint8ListToUint64>uint64 expec = 0x8007060504030201u;
+					//<uint8ListToInt64>  int64 expec = 0x8007060504030201s;
+					//<uint8ListToFloat32>float32 expec = 1.0;
+					//<uint8ListToFloat64>float64 expec = 1.0;
+					
+					rstring func =
+					//<uint8ListToUint16>"uint8ListToUint16";
+					//<uint8ListToInt16>"uint8ListToInt16";
+					//<uint8ListToUint32>"uint8ListToUint32";
+					//<uint8ListToInt32>"uint8ListToInt32";
+					//<uint8ListToUint64>"uint8ListToUint64";
+					//<uint8ListToInt64>"uint8ListToInt64";
+					//<uint8ListToFloat32>"uint8ListToFloat32";
+					//<uint8ListToFloat64>"uint8ListToFloat64";
+
+					printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " expec=" + (rstring)expec);
+					if (y != expec) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

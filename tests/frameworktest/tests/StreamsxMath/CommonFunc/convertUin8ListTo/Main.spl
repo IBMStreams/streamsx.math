@@ -1,0 +1,31 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite Main {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<toUint64*>list<uint8> x = [0ub,0ub,2ub,3ub,4ub,5ub,6ub,7ub];
+					//<float64>list<uint8> x = [0x3fu, 0xf0u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u];
+					//<toUint64*>mutable uint64 y = 0ul;
+					//<float64*>mutable float64 y = 0.0;
+					//<toUint64Be>boolean r = convertUint8ListToUint64(x, true, 8, false, y);
+					//<toUint64Le>boolean r = convertUint8ListToUint64(x, true, 8, true, y);
+					//<float64>boolean r = convertUint8ListToFloat64(x, 8, y);
+					
+					//<toUint64Be>uint64 expec = 0x0706050403020000;
+					//<toUint64Le>uint64 expec = 0x0000020304050607;
+					//<float64>float64 expec = 1.0;
+					boolean expecr = true;
+
+					rstring func = "convertUint8ListToUint64";
+
+					printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " expec=" + (rstring)expec + " r=" + (rstring)r + " expecr=" + (rstring)expecr);
+					if (r != expecr) abort();
+					if (y != expec) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}

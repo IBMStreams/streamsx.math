@@ -1,0 +1,52 @@
+/**
+This namespace contains definitions for numerical functions from the c++ standard library.
+
+# Trigonometric functions
+* cos Compute cosine
+* sin Compute sine
+* tan Compute tangent
+* acos Compute arc cosine
+* asin Compute arc sine
+* atan Compute arc tangent
+* atan2 Compute arc tangent with two parameters
+
+# Hyperbolic functions
+* cosh Compute hyperbolic cosine
+* sinh Compute hyperbolic sine
+* tanh Compute hyperbolic tangent
+* acosh Compute area hyperbolic cosine
+* asinh Compute area hyperbolic sine
+* atanh Compute area hyperbolic tangent
+
+# Exponential and logarithmic functions
+* exp Compute exponential function
+* log Compute natural logarithm
+* log10 Compute common logarithm
+* exp2 Compute binary exponential function
+* log2 Compute binary logarithm
+
+# Power functions
+* sqrt Compute square root
+* cbrt Compute cubic root
+* hypot Compute hypotenuse
+
+# Error and gamma functions
+* erf Compute error function
+* erfc Compute complementary error function
+
+# Rounding and remainder functions
+
+* trunc Truncate value
+
+# Other functions
+* fma Multiply-add
+
+# Complex values
+* arg Phase angle of complex
+* norm Norm of complex
+* conj Complex conjugate
+* polar Complex from polar components
+* proj Complex projection
+ */
+
+namespace com.ibm.streamsx.math.std;

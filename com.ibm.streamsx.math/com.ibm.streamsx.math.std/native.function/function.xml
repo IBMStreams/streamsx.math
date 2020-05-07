@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="ASCII"?>
+<functionModel xmlns:common="http://www.ibm.com/xmlns/prod/streams/spl/common" xmlns="http://www.ibm.com/xmlns/prod/streams/spl/function">
+  <functionSet>
+    <headerFileName>mathlib.h</headerFileName>
+    <cppNamespaceName>std</cppNamespaceName>
+    <functions>
+      <!-- Trigonometric functions -->
+      <function>
+        <description>Returns the cosine of an angle of x radians. Underlying function: [http://www.cplusplus.com/reference/cmath/cos/]</description>
+        <prototype><![CDATA[<float T> public T cos(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the cosine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/cos/]</description>
+        <prototype><![CDATA[<complex T> public T cos(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the sine of an angle of x radians. Underlying function: [http://www.cplusplus.com/reference/cmath/sin/]</description>
+        <prototype><![CDATA[<float T> public T sin(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the sine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/sin/]</description>
+        <prototype><![CDATA[<complex T> public T sin(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the tangent of an angle of x radians. Underlying function: [http://www.cplusplus.com/reference/cmath/tan/]</description>
+        <prototype><![CDATA[<float T> public T tan(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the tangent of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/tan/]</description>
+        <prototype><![CDATA[<complex T> public T tan(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the principal value of the arc cosine of x, expressed in radians. Underlying function: [http://www.cplusplus.com/reference/cmath/acos/]</description>
+        <prototype><![CDATA[<float T> public T acos(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the arc cosine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/acos/]</description>
+        <prototype><![CDATA[<complex T> public T acos(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the principal value of the arc sine of x, expressed in radians. Underlying function: [http://www.cplusplus.com/reference/cmath/asin/]</description>
+        <prototype><![CDATA[<float T> public T asin(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the arc sine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/asin/]</description>
+        <prototype><![CDATA[<complex T> public T asin(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the principal value of the arc tangent of x, expressed in radians. Underlying function: [http://www.cplusplus.com/reference/cmath/atan/]</description>
+        <prototype><![CDATA[<float T> public T atan(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the arc tangent of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/atan/]</description>
+        <prototype><![CDATA[<complex T> public T atan(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the principal value of the arc tangent of y/x, expressed in radians. Underlying function: [http://www.cplusplus.com/reference/cmath/atan2/]</description>
+        <prototype><![CDATA[<float T> public T atan2(T y, T x)]]></prototype>
+      </function>
+
+      <!-- Hyperbolic functions -->
+      <function>
+        <description>Returns the hyperbolic cosine of x. Underlying function: [http://www.cplusplus.com/reference/cmath/cosh/]</description>
+        <prototype><![CDATA[<float T> public T cosh(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the hyperbolic cosine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/cosh/]</description>
+        <prototype><![CDATA[<complex T> public T cosh(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the hyperbolic sine of x. Underlying function: [http://www.cplusplus.com/reference/cmath/sinh/]</description>
+        <prototype><![CDATA[<float T> public T sinh(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the hyperbolic sine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/sinh/]</description>
+        <prototype><![CDATA[<complex T> public T sinh(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the hyperbolic tangent of x. Underlying function: [http://www.cplusplus.com/reference/cmath/tanh/]</description>
+        <prototype><![CDATA[<float T> public T tanh(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the hyperbolic tangent of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/tanh/]</description>
+        <prototype><![CDATA[<complex T> public T tanh(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the nonnegative area hyperbolic cosine of x. Underlying function: [http://www.cplusplus.com/reference/cmath/acosh/]</description>
+        <prototype><![CDATA[<float T> public T acosh(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the arc hyperbolic cosine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/acosh/]</description>
+        <prototype><![CDATA[<complex T> public T acosh(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the arc hyperbolic sine of x. Underlying function: [http://www.cplusplus.com/reference/cmath/asinh/]</description>
+        <prototype><![CDATA[<float T> public T asinh(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the arc hyperbolic sine of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/asinh/]</description>
+        <prototype><![CDATA[<complex T> public T asinh(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the area hyperbolic tangent of x. Underlying function: [http://www.cplusplus.com/reference/cmath/atanh/]</description>
+        <prototype><![CDATA[<float T> public T atanh(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the arc hyperbolic tangent of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/atanh/]</description>
+        <prototype><![CDATA[<complex T> public T atanh(T x)]]></prototype>
+      </function>
+
+    <!-- Exponential and logarithmic functions -->
+      <function>
+        <description>Returns the base-e exponential function of x, which is e raised to the power x. Underlying function: [http://www.cplusplus.com/reference/cmath/exp/]</description>
+        <prototype><![CDATA[<float T> public T exp(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the base-e exponential of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/exp/]</description>
+        <prototype><![CDATA[<complex T> public T exp(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the base-2 exponential function of x, which is 2 raised to the power x. Underlying function: [http://www.cplusplus.com/reference/cmath/exp2/]</description>
+        <prototype><![CDATA[<float T> public T exp2(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the natural logarithm of x. Underlying function: [http://www.cplusplus.com/reference/cmath/log/]</description>
+        <prototype><![CDATA[<float T> public T log(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the natural (base-e) logarithm of the complex number x, using the principal branch, whose cuts are along the negative real axis. Underlying function: [http://www.cplusplus.com/reference/complex/log/]</description>
+        <prototype><![CDATA[<complex T> public T log(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the common (base-10) logarithm of x. Underlying function: [http://www.cplusplus.com/reference/cmath/log10/]</description>
+        <prototype><![CDATA[<float T> public T log10(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the common (base-10) logarithm of the complex number x using the principal branch, whose cuts are along the negative real axis. Underlying function: [http://www.cplusplus.com/reference/complex/log10/]</description>
+        <prototype><![CDATA[<complex T> public T log10(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the binary (base-2) logarithm of x. Underlying function: [http://www.cplusplus.com/reference/cmath/log2/]</description>
+        <prototype><![CDATA[<float T> public T log2(T x)]]></prototype>
+      </function>
+
+    <!-- Power functions -->
+      <function>
+        <description>Returns the square root of x. Underlying function: [http://www.cplusplus.com/reference/cmath/sqrt/]</description>
+        <prototype><![CDATA[<float T> public T sqrt(T x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the square root of x using the principal branch, whose cuts are along the negative real axis. Underlying function: [http://www.cplusplus.com/reference/complex/sqrt/]</description>
+        <prototype><![CDATA[<complex T> public T sqrt(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the cubic root of x. Underlying function: [http://www.cplusplus.com/reference/cmath/cbrt/]</description>
+        <prototype><![CDATA[<float T> public T cbrt(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the hypotenuse of a right-angled triangle whose legs are x and y. Underlying function: [http://www.cplusplus.com/reference/cmath/hypot/]</description>
+        <prototype><![CDATA[<float T> public T hypot(T x, T y)]]></prototype>
+      </function>
+
+    <!-- Error and gamma functions -->
+      <function>
+        <description>Returns the error function value for x. Underlying function: [http://www.cplusplus.com/reference/cmath/erf/]</description>
+        <prototype><![CDATA[<float T> public T erf(T x)]]></prototype>
+      </function>
+    
+      <function>
+        <description>Returns the complementary error function value for x. Underlying function: [http://www.cplusplus.com/reference/cmath/erfc/]</description>
+        <prototype><![CDATA[<float T> public T erfc(T x)]]></prototype>
+      </function>
+    
+    <!-- Rounding and remainder functions -->
+      <function>
+        <description>Rounds x toward zero, returning the nearest integral value that is not larger in magnitude than x. Underlying function: [http://www.cplusplus.com/reference/cmath/trunc/]</description>
+        <prototype><![CDATA[<float T> public T trunc(T x)]]></prototype>
+      </function>
+    
+    <!-- Other functions -->
+      <function>
+        <description>
+        Returns x\*y+z.
+        The function computes the result without losing precision in any intermediate result.
+        Underlying function: [http://www.cplusplus.com/reference/cmath/fma/]
+        </description>
+        <prototype><![CDATA[<float T> public T fma(T x, T y, T z)]]></prototype>
+      </function>
+    
+    <!-- complex functions -->
+      <function>
+        <description>Returns the phase angle (or angular component) of the complex number x, expressed in radians. Underlying function: [http://www.cplusplus.com/reference/complex/arg/]</description>
+        <prototype><![CDATA[public float64 arg(complex64 x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the phase angle (or angular component) of the complex number x, expressed in radians. Underlying function: [http://www.cplusplus.com/reference/complex/arg/]</description>
+        <prototype><![CDATA[public float32 arg(complex32 x)]]></prototype>
+      </function>
+    
+      <function>
+        <description>Returns the norm value of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/norm/]</description>
+        <prototype><![CDATA[public float64 norm(complex64 x)]]></prototype>
+      </function>
+      <function>
+        <description>Returns the norm value of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/norm/]</description>
+        <prototype><![CDATA[public float32 norm(complex32 x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the conjugate of the complex number x. Underlying function: [http://www.cplusplus.com/reference/complex/conj/]</description>
+        <prototype><![CDATA[<complex T> public T conj(T x)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns a complex object (in cartesian format) corresponding to the complex number defined by its polar components rho and theta. Underlying function: [http://www.cplusplus.com/reference/complex/polar/]</description>
+        <prototype><![CDATA[public complex64 polar(float64 rho, float64 theta)]]></prototype>
+      </function>
+      <function>
+        <description>Returns a complex object (in cartesian format) corresponding to the complex number defined by its polar components rho and theta. Underlying function: [http://www.cplusplus.com/reference/complex/polar/]</description>
+        <prototype><![CDATA[public complex32 polar(float32 rho, float32 theta)]]></prototype>
+      </function>
+
+      <function>
+        <description>Returns the projection of the complex number x onto the Riemann sphere. Underlying function: [http://www.cplusplus.com/reference/complex/proj/]</description>
+        <prototype><![CDATA[<complex T> public T proj(T x)]]></prototype>
+      </function>
+    
+    </functions>
+    <dependencies>
+      <library>
+        <common:description>math functions</common:description>
+        <common:managedLibrary>
+          <common:includePath>../../impl/include</common:includePath>
+        </common:managedLibrary>
+      </library>
+    </dependencies>
+  </functionSet>
+</functionModel>

@@ -1,0 +1,58 @@
+public composite StdFuncComplex2 {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<*32>complex32 one = [1.0w, 0.0w];
+					//<*64>complex64 one = [1.0l, 0.0l];
+					//<*32>complex32 two = [2.0w, 0.0w];
+					//<*64>complex64 two = [2.0l, 0.0l];
+					//<*32>complex32 four = [4.0w, 0.0w];
+					//<*64>complex64 four = [4.0l, 0.0l];
+					//<*32>complex32 eight = [8.0w, 0.0w];
+					//<*64>complex64 eight = [8.0l, 0.0l];
+					//<*32>complex32 ten = [10.0w, 0.0w];
+					//<*64>complex64 ten = [10.0l, 0.0l];
+					//<*32>complex32 e = [2.718281828w, 0.0w];
+					//<*64>complex64 e = [2.718281828l, 0.0l];
+					
+					//<*32>mutable complex32 y = [0.0, 0.0];
+					//<*64>mutable complex64 y = [0.0, 0.0];
+					//<*32>mutable complex32 x = [0.0, 0.0];
+					//<*64>mutable complex64 x = [0.0, 0.0];
+					//<exp_*>x = one; y = com.ibm.streamsx.math.std::exp(x);
+					//<exp2_*>x = one; y = com.ibm.streamsx.math.std::exp2(x);
+					//<log_*>x = e; y = com.ibm.streamsx.math.std::log(x);
+					//<log2_*>x = two; y = com.ibm.streamsx.math.std::log2(x);
+					//<log10_*>x = ten; y = com.ibm.streamsx.math.std::log10(x);
+					//<sqrt_*>x = four; y = com.ibm.streamsx.math.std::sqrt(x);
+					//<cbrt_*>x = eight; y = com.ibm.streamsx.math.std::cbrt(x);
+					
+					//<exp_*>complex64 expec = [2.718281828l, 0.0l];
+					//<exp2_*>complex64 expec = [2.0l, 0.0l];
+					//<log_*>complex64 expec = [1.0l, 0.0l];
+					//<log2_*>complex64 expec = [1.0l, 0.0l];
+					//<log10_*>complex64 expec = [1.0l, 0.0l];
+					//<sqrt_*>complex64 expec = [2.0l, 0.0l];
+					//<cbrt_*>complex64 expec = [2.0l, 0.0l];
+					complex64 y64 = y;
+					float64 diff = real(y64) - real(expec);
+					float64 diffi = imag(y64) - imag(expec);
+					
+					rstring func =
+					//<exp_*>"exp";
+					//<exp2_*>"exp2";
+					//<log_*>"log";
+					//<log2_*>"log2";
+					//<log10_*>"log10";
+					//<sqrt_*>"sqrt";
+					//<cbrt_*>"cbrt";
+					printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y + " diff=" + (rstring)diff + " diffi=" + (rstring)diffi);
+					if (abs(diff) > 0.00001l) abort();
+					if (abs(diffi) > 0.00001l) abort();
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}
