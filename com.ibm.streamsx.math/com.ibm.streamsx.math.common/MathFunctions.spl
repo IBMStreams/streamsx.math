@@ -14,7 +14,6 @@
 //#                    mapFromUint32ToFloat64()
 //#                    mapFromInt16ToFloat64()
 //#                    mapFromUint16ToFloat64
-//#                    atan2()
 //#                    isMatrixDimensionValid()
 //#                    multiplyMatrices()
 //#                    scalarProduct()
@@ -542,7 +541,7 @@ public boolean berOidToUint8List(	list<uint8>			berOidInValues,
 // ################################################################################################################################################################################
 
 /**
- * This function maps an int32InValue out of a range between MIN_I and MAX_I to a float64 value
+ * This function maps/transforms an int32InValue out of a range between MIN_I and MAX_I to a float64 value
  * into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a
  * lat or lon WGS84 coordinate into decimal degrees between -90..+90 or -180..+180 respectively.
  * If the mapping fails, e.g. since int32InValue is out of range or contained in ERROR_I,
@@ -665,7 +664,7 @@ public boolean mapFromInt32ToFloat64(			int32			int32InValue,
 // ################################################################################################################################################################################
 
 /**
- * This function maps an uint32InValue out of a range between MIN_I and MAX_I to a float64 value
+ * This function maps/transforms an uint32InValue out of a range between MIN_I and MAX_I to a float64 value
  * into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a
  * sensor relative roll angle into decimal degrees between 0..+360.
  * If the mapping fails, e.g. since uint32InValue is out of range or contained in ERROR_I,
@@ -784,7 +783,7 @@ public boolean mapFromUint32ToFloat64(			uint32			uint32InValue,
 // ################################################################################################################################################################################
 
 /**
- * This function maps an int16InValue out of a range between MIN_I and MAX_I to a float64 value
+ * This function maps/transforms an int16InValue out of a range between MIN_I and MAX_I to a float64 value
  * into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a
  * platform roll angle (short) into decimal degrees between -50..+50.
  * If the mapping fails, e.g. since int16InValue is out of range or contained in ERROR_I,
@@ -903,7 +902,7 @@ public boolean mapFromInt16ToFloat64(			int16			int16InValue,
 // ################################################################################################################################################################################
 
 /**
- * This function maps an uint16InValue out of a range between MIN_I and MAX_I to a float64 value
+ * This function maps/transforms an uint16InValue out of a range between MIN_I and MAX_I to a float64 value
  * into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a
  * platform heading angle into decimal degrees between 0..+360.
  * If the mapping fails, e.g. since uint16InValue is out of range or contained in ERROR_I,
