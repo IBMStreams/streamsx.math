@@ -1833,7 +1833,7 @@ public boolean convertToBoolean(	rstring booleanInString,
 
 	return ret;
 }
-
+// ### \convertToBoolean ###
 
 // ################################################################################################################################################################################
 
@@ -1864,8 +1864,16 @@ public boolean convertToFloat64(	rstring floatInString,
 	mutable float64 _number = 0.0;
 	mutable int32	_bytes = 0;
 
+	// remove leading an trailing spaces if not strictParsing
+	mutable rstring inp;
+	if (strictParsing) {
+		inp = floatInString;
+	} else {
+		inp = trim( floatInString, " \t" );
+	}
+	
 	// check if input is empty and for the case, this is allowed, assign default value
-	if( 1 > length( floatInString ) )
+	if( 1 > length( inp ) )
 	{
 
 		if( true == allowEmpty )
@@ -1875,13 +1883,13 @@ public boolean convertToFloat64(	rstring floatInString,
 		}
 		else
 		{
-			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** allowEmpty = false and floatInString is empty! *** floatInString: " + floatInString);
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** allowEmpty = false and floatInString is empty! *** floatInString: '" + floatInString + "'");
 		}
 	}
 	else
 	{
 
-		_bytes = parseNumber( _number, floatInString );
+		_bytes = parseNumber( _number, inp );
 
 		if( 0 <= _bytes )
 		{
@@ -1889,14 +1897,14 @@ public boolean convertToFloat64(	rstring floatInString,
 			{
 				if( true == strictParsing )
 				{
-					if( length( floatInString ) == _bytes )
+					if( length( inp ) == _bytes )
 					{
 						swap( _number, floatOutValue );
 						ret = true;
 					}
 					else
 					{
-						if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** floatInString partly parsed only *** floatInString: " + floatInString);
+						if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** floatInString partly parsed only *** floatInString: '" + floatInString + "'");
 					}
 				}
 				else
@@ -1907,15 +1915,18 @@ public boolean convertToFloat64(	rstring floatInString,
 			}
 			else
 			{
-				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** " + (rstring)_number + " is not in range [" + (rstring)min + " .. " + (rstring)max + "] *** floatInString: " + floatInString);
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** " + (rstring)_number + " is not in range [" + (rstring)min + " .. " + (rstring)max + "] *** floatInString: '" + floatInString + "'");
 			}
+		}
+		else
+		{
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": Invalid input *** floatInString: '" + floatInString + "'");
 		}
 	}
 
 	return ret;
-
 }
-
+// ### \convertToFloat64 ###
 
 // ################################################################################################################################################################################
 
@@ -1939,21 +1950,75 @@ public boolean convertToInt64(		rstring intInString,
 									int64	max,
 									mutable int64 intOutValue )
 {
+	rstring FUNCTION_NAME = "COMMON_FUNCTIONS_CONVERTTOINT64";
+	
 	mutable boolean ret = false;
 
-	mutable float64 out = 0.0;
-	ret = convertToFloat64(	intInString,
-							strictParsing,
-							allowEmpty,
-							(float64)default,
-							(float64)min,
-							(float64)max,
-							out );
-	intOutValue = (int64)out;
+	mutable int64 _number = 0l;
+	mutable int32 _bytes = 0;
 
+	// remove leading an trailing spaces if not strictParsing
+	mutable rstring inp;
+	if (strictParsing) {
+		inp = intInString;
+	} else {
+		inp = trim( intInString, " \t" );
+	}
+
+	// check if input is empty and for the case, this is allowed, assign default value
+	if( 1 > length( inp ) )
+	{
+
+		if( true == allowEmpty )
+		{
+			intOutValue = default;
+			ret = true;
+		}
+		else
+		{
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** allowEmpty = false and floatInString is empty! *** intInString: '" + intInString + "'");
+		}
+	}
+	else
+	{
+
+		_bytes = parseNumber( _number, inp, 0 );
+
+		if( 0 <= _bytes )
+		{
+			if( ( min <= _number ) && ( max >= _number ) )
+			{
+				if( true == strictParsing )
+				{
+					if( length( inp ) == _bytes )
+					{
+						swap( _number, intOutValue );
+						ret = true;
+					}
+					else
+					{
+						if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** floatInString partly parsed only *** intInString: '" + intInString + "'");
+					}
+				}
+				else
+				{
+					swap( _number, intOutValue );
+					ret = true;
+				}
+			}
+			else
+			{
+				if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": *** " + (rstring)_number + " is not in range [" + (rstring)min + " .. " + (rstring)max + "] *** intInString: '" + intInString + "'");
+			}
+		}
+		else
+		{
+			if ( isTraceable( Trace.warn ) ) appTrc( Trace.warn, FUNCTION_NAME + ": Invalid input *** intInString: '" + intInString + "'");
+		}
+	}
 	return ret;
 }
-
+// ### \convertToInt64 ###
 
 // ################################################################################################################################################################################
 
@@ -1979,13 +2044,13 @@ public boolean convertToUint32(		rstring intInString,
 {
 	mutable boolean ret = false;
 
-	mutable float64 out = 0.0;
-	ret = convertToFloat64(	intInString,
+	mutable int64 out = 0l;
+	ret = convertToInt64(	intInString,
 							strictParsing,
 							allowEmpty,
-							(float64)default,
-							(float64)min,
-							(float64)max,
+							(int64)default,
+							(int64)min,
+							(int64)max,
 							out );
 	intOutValue = (uint32)out;
 
@@ -2017,13 +2082,13 @@ public boolean convertToUint8(		rstring intInString,
 {
 	mutable boolean ret = false;
 
-	mutable float64 out = 0.0;
-	ret = convertToFloat64(	intInString,
+	mutable int64 out = 0l;
+	ret = convertToInt64(	intInString,
 							strictParsing,
 							allowEmpty,
-							(float64)default,
-							(float64)min,
-							(float64)max,
+							(int64)default,
+							(int64)min,
+							(int64)max,
 							out );
 	intOutValue = (uint8)out;
 
