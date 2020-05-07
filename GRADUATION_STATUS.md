@@ -1,4 +1,4 @@
-# streamsx.XXXXX Graduation Status
+# streamsx.math Graduation Status
 
 
 ## Overview
