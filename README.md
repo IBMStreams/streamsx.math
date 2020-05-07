@@ -16,3 +16,6 @@ This namespace contains definitions for numerical functions from the c++ standar
 
 This namespace contains o number of special conversion functions, matrix manipulation and transformation.
 
+## Changes
+
+https://github.com/IBMStreams/streamsx.math/blob/develop/com.ibm.streamsx.math/CHANGELOG.md
