@@ -1,0 +1,161 @@
+use com.ibm.streamsx.math.common::*;
+
+public composite Main {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<float64>list<rstring>   x   = ["0", "0.0", "-1", " 256","256 ","0x55", "9.55024477895605e+307","-9.55024477895605e+307","", " \t"," xy"];
+					//<float64>list<float64> exys  = [0.0,  0.0,  -1.0, 256.0, 0.0,   85.0,   9.55024477895605e+307,  -9.55024477895605e+307,  0.0,  0.0,  0.0];
+					//<float64>list<boolean> exrs  = [true, true, true, true, false,  true,   true,                   true,                    false,false,false];
+					//not strict
+					//<float64>list<float64> exyn  = [0.0,  0.0,  -1.0, 256.0,256.0,   85.0,   9.55024477895605e+307, -9.55024477895605e+307,  0.0,  0.0,  0.0];
+					//<float64>list<boolean> exrn  = [true, true, true, true,  true,  true,   true,                   true,                    false,false,false];
+					//allow empty
+					//<float64>list<float64> exye  = [0.0,  0.0,  -1.0, 256.0,256.0,   85.0,   9.55024477895605e+307, -9.55024477895605e+307,  1.0,  1.0,  0.0];
+					//<float64>list<boolean> exre  = [true, true, true, true,  true,  true,   true,                   true,                    true,true,false];
+					//with min max
+					//<float64>list<float64> exym  = [0.0,  0.0,  -1.0, 256.0,256.0,   85.0,   0.0,                   0.0,                     1.0,  1.0,  0.0];
+					//<float64>list<boolean> exrm  = [true, true, true, true,  true,  true,   false,                  false,                   true,true,false];
+
+					//<int64>list<rstring>   x     = ["0", "-1", " 256","256 ", "0x55", "9223372036854775807","-9223372036854775808","",   " \t"," xy"];
+					//<int64>list<int64>   exys    = [0l,  -1l,  256l,  0l,     85l,     9223372036854775807l, -9223372036854775808l, 0l,   0l,  0l];
+					//<int64>list<boolean> exrs    = [true,true, true,  false,  true,   true,                 true,                 false,false,false];
+					//not strict
+					//<int64>list<int64>   exyn    = [0l,   -1l,  256l, 256l,   85l,    9223372036854775807l,-9223372036854775808l,  0l,   0l,  0l];
+					//<int64>list<boolean> exrn    = [true, true, true, true,   true,   true,                true,                   false,false,false];
+					//allow empty
+					//<int64>list<int64>   exye    = [0l,   -1l,  256l, 256l,   85l,    9223372036854775807l,-9223372036854775808l, 1l,  1l,  0l];
+					//<int64>list<boolean> exre    = [true, true, true, true,   true,   true,                 true,                 true,true,false];
+					//with min max
+					//<int64>list<int64>   exym    = [0l,   -1l,  256l, 256l,   85l,    0l,                  0l,                    1l,   1l,  0l];
+					//<int64>list<boolean> exrm    = [true, true, true,  true,  true,   false,               false,                 true,true,false];
+
+					//<uint32>list<rstring>   x    = ["0", "-1", " 256","256 ", "0x55", "4294967295",         "0",                  "", " \t"," xy"];
+					//<uint32>list<uint32>   exys  = [0u,  0u,   256u,  0u,     85u,   4294967295u,            0u,                   0u,   0u, 0u];
+					//<uint32>list<boolean> exrs   = [true,false, true,  false,  true,   true,               true,                 false,false,false];
+					//not strict
+					//<uint32>list<uint32>   exyn  = [0u,   0u,  256u, 256u,   85u,   4294967295u,            0u,                    0u,   0u, 0u];
+					//<uint32>list<boolean> exrn   = [true,false, true, true,   true,   true,                true,                false,false,false];
+					//allow empty
+					//<uint32>list<uint32>   exye  = [0u,    0u,  256u, 256u,   85u,    4294967295u,          0u,                    1u,   1u, 0u];
+					//<uint32>list<boolean> exre   = [true,false, true, true,   true,   true,                 true,               true, true,false];
+					//with min max
+					//<uint32>list<uint32>   exym  = [0u,    0u,  256u, 256u,   85u,    0u,                  0u,                     1u,   1u, 0u];
+					//<uint32>list<boolean> exrm   = [false,false,true,  true,  true,   false,               false,               true, true,false];
+
+					//<uint8>list<rstring>   x     = ["0", "-1", " 25", "25 ",  "0x55", "255",               "0",                  "",   " \t", " x"];
+					//<uint8>list<uint8>   exys    = [0ub,  0ub,  25ub,    0ub,   85ub, 255ub,               0ub,                   0ub,   0ub, 0ub];
+					//<uint8>list<boolean> exrs    = [true,false, true,  false,  true,   true,               true,                 false,false,false];
+					//not strict
+					//<uint8>list<uint8>   exyn    = [0ub,  0ub,  25ub,  25ub,    85ub,  255ub,               0ub,                  0ub,   0ub, 0ub];
+					//<uint8>list<boolean> exrn    = [true,false, true, true,   true,   true,                true,                false,false,false];
+					//allow empty
+					//<uint8>list<uint8>   exye    = [0ub,  0ub,  25ub,  25ub,    85ub,   255ub,              0ub,                 1ub,   1ub, 0ub];
+					//<uint8>list<boolean> exre    = [true,false, true, true,   true,   true,                 true,               true, true,false];
+					//with min max
+					//<uint8>list<uint8>   exym    = [0ub,  0ub,  25ub,  25ub,   85ub,   0ub,                 0ub,                 1ub,   1ub,0ub];
+					//<uint8>list<boolean> exrm    = [false,false,true,  true,  true,   false,               false,               true,true,false];
+
+					//<float64>mutable list<float64> y = [];
+					//<int64>mutable list<int64> y = [];
+					//<uint32>mutable list<uint32> y = [];
+					//<uint8>mutable list<uint8> y = [];
+					mutable list<boolean> r = [];
+					mutable int32 i = 0;
+					while (i < size(x)) {
+						//<float64>mutable float64 yy = 0.0;
+						//<float64>boolean rr = convertToFloat64(x[i], true, false, 1.0, -9.55024477895605e+307, 9.55024477895605e+307, yy);
+						//<int64>mutable int64 yy = 0l;
+						//<int64>boolean rr = convertToInt64(x[i], true, false, 1l, -9223372036854775808l, 9223372036854775807l, yy);
+						//<uint32>mutable uint32 yy = 0u;
+						//<uint32>boolean rr = convertToUint32(x[i], true, false, 1u, 0u, 4294967295u, yy);
+						//<uint8>mutable uint8 yy = 0ub;
+						//<uint8>boolean rr = convertToUint8(x[i], true, false, 1ub, 0ub, 255ub, yy);
+						appendM(r, rr);
+						appendM(y, yy);
+						++i;
+					}
+					printStringLn("strict");
+					printStringLn("  y=" + (rstring)y);
+					printStringLn("exy=" + (rstring)exys);
+					printStringLn("  r=" + (rstring)r);
+					printStringLn("exr=" + (rstring)exrs);
+					if (y != exys) abort();
+					if (r != exrs) abort();
+					clearM(y);
+					clearM(r);
+					i = 0;
+					while (i < size(x)) {
+						//<float64>mutable float64 yy = 0.0;
+						//<float64>boolean rr = convertToFloat64(x[i], false, false, 1.0, -9.55024477895605e+307, 9.55024477895605e+307, yy);
+						//<int64>mutable int64 yy = 0l;
+						//<int64>boolean rr = convertToInt64(x[i], false, false, 1l, -9223372036854775808l, 9223372036854775807l, yy);
+						//<uint32>mutable uint32 yy = 0u;
+						//<uint32>boolean rr = convertToUint32(x[i], false, false, 1u, 0u, 4294967295u, yy);
+						//<uint8>mutable uint8 yy = 0ub;
+						//<uint8>boolean rr = convertToUint8(x[i], false, false, 1ub, 0ub, 255ub, yy);
+						appendM(r, rr);
+						appendM(y, yy);
+						++i;
+					}
+					printStringLn("normal");
+					printStringLn("  y=" + (rstring)y);
+					printStringLn("exy=" + (rstring)exyn);
+					printStringLn("  r=" + (rstring)r);
+					printStringLn("exr=" + (rstring)exrn);
+					if (y != exyn) abort();
+					if (r != exrn) abort();
+					clearM(y);
+					clearM(r);
+					i = 0;
+					while (i < size(x)) {
+						//<float64>mutable float64 yy = 0.0;
+						//<float64>boolean rr = convertToFloat64(x[i], false, true, 1.0, -9.55024477895605e+307, 9.55024477895605e+307, yy);
+						//<int64>mutable int64 yy = 0l;
+						//<int64>boolean rr = convertToInt64(x[i], false, true, 1l, -9223372036854775808l, 9223372036854775807l, yy);
+						//<uint32>mutable uint32 yy = 0u;
+						//<uint32>boolean rr = convertToUint32(x[i], false, true, 1u, 0u, 4294967295u, yy);
+						//<uint8>mutable uint8 yy = 0ub;
+						//<uint8>boolean rr = convertToUint8(x[i], false, true, 1ub, 0ub, 255ub, yy);
+						appendM(r, rr);
+						appendM(y, yy);
+						++i;
+					}
+					printStringLn("empty");
+					printStringLn("  y=" + (rstring)y);
+					printStringLn("exy=" + (rstring)exye);
+					printStringLn("  r=" + (rstring)r);
+					printStringLn("exr=" + (rstring)exre);
+					if (y != exye) abort();
+					if (r != exre) abort();
+					clearM(y);
+					clearM(r);
+					i = 0;
+					while (i < size(x)) {
+						//<float64>mutable float64 yy = 0.0;
+						//<float64>boolean rr = convertToFloat64(x[i], false, true, 1.0, -1000.0, 1000.0, yy);
+						//<int64>mutable int64 yy = 0l;
+						//<int64>boolean rr = convertToInt64(x[i], false, true, 1l, -1000l, 1000l, yy);
+						//<uint32>mutable uint32 yy = 0u;
+						//<uint32>boolean rr = convertToUint32(x[i], false, true, 1u, 10u, 1000u, yy);
+						//<uint8>mutable uint8 yy = 0ub;
+						//<uint8>boolean rr = convertToUint8(x[i], false, true, 1ub, 10ub, 100ub, yy);
+						appendM(r, rr);
+						appendM(y, yy);
+						++i;
+					}
+					printStringLn("min max");
+					printStringLn("  y=" + (rstring)y);
+					printStringLn("exy=" + (rstring)exym);
+					printStringLn("  r=" + (rstring)r);
+					printStringLn("exr=" + (rstring)exrm);
+					if (y != exym) abort();
+					if (r != exrm) abort();
+					
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}
