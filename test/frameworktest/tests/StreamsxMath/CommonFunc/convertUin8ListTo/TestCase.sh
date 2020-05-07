@@ -1,4 +1,4 @@
-#--variantList='norm pretty uint8'
+#--variantList='toUint64Be toUint64Le float64'
 
 setCategory 'quick'
 

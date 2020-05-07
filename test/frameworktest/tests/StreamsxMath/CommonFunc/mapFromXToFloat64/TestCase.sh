@@ -1,4 +1,4 @@
-#--variantList='norm pretty uint8'
+#--variantList='int32p uint32p int16p uint16p int32n uint32n int16n uint16n'
 
 setCategory 'quick'
 

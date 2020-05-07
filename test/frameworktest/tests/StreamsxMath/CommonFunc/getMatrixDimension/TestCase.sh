@@ -1,4 +1,4 @@
-#--variantList='norm pretty uint8'
+#--variantList='norm f1'
 
 setCategory 'quick'
 

@@ -1,4 +1,4 @@
-#--variantList='norm pretty uint8'
+#--variantList='row column transp'
 
 setCategory 'quick'
 
