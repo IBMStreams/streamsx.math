@@ -1,0 +1,1125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en-us" lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="copyright" content="(C) Copyright 2005"/>
+<meta name="DC.rights.owner" content="(C) Copyright 2005"/>
+<meta name="DC.Type" content="reference"/>
+<meta name="DC.Title" content="SPL File MathFunctions.spl"/>
+<meta name="DC.Format" content="XHTML"/>
+<meta name="DC.Identifier" content="spldoc_compilationunit"/>
+<link rel="stylesheet" type="text/css" href="../../html/commonltr.css"/>
+<link rel="stylesheet" type="text/css" href="../../html/spldoc.css"/>
+<title>SPL File MathFunctions.spl</title>
+</head>
+<body id="spldoc_compilationunit">
+
+
+<h1 class="title topictitle1">SPL File <tt class="ph tt">MathFunctions.spl</tt></h1>
+
+<div class="body refbody">
+<div class="section">
+<p class="p">
+<a class="xref" href="../toolkits/toolkits.html">Mathematics and statistics toolkit</a> &gt; <a class="xref" href="tk$com.ibm.streamsx.math.html">com.ibm.streamsx.math 1.0.0</a> &gt; <a class="xref" href="ns$com.ibm.streamsx.math.common.html">com.ibm.streamsx.math.common</a> &gt; MathFunctions.spl</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Content</h2>
+  
+  <dl class="dl">
+    <dt class="dt dlterm"/>
+<dd class="dd"/>
+
+    
+      <dt class="dt dlterm splhead-2">Functions</dt>
+
+      <dd class="dd">
+<ul class="sl simple">
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__berOidToUint8List.list:.:uint8:.:.boolean.list:.:uint8:.:">berOidToUint8List(list&lt;uint8&gt;, boolean, list&lt;uint8&gt;)</a></strong>: This function decodes a sequence of BER-OID encoded bytes and stores the decoded values into a list of uint8.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__convertToBoolean.rstring.boolean.boolean.boolean.boolean">convertToBoolean(rstring, boolean, boolean, boolean, boolean)</a></strong>: Validates, if an rstring contains a boolean value and converts it, if possible.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__convertToFloat64.rstring.boolean.boolean.float64.float64.float64.float64">convertToFloat64(rstring, boolean, boolean, float64, float64, float64, float64)</a></strong>: Validates, if an rstring contains a float value in the given range and converts it, if possible.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__convertToInt64.rstring.boolean.boolean.int64.int64.int64.int64">convertToInt64(rstring, boolean, boolean, int64, int64, int64, int64)</a></strong>: Validates, if an rstring contains an integer value in the given range and converts it, if possible.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__convertToUint32.rstring.boolean.boolean.uint32.uint32.uint32.uint32">convertToUint32(rstring, boolean, boolean, uint32, uint32, uint32, uint32)</a></strong>: Validates, if an rstring contains an unsigned integer value in the given range and converts it, if possible.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__convertToUint8.rstring.boolean.boolean.uint8.uint8.uint8.uint8">convertToUint8(rstring, boolean, boolean, uint8, uint8, uint8, uint8)</a></strong>: Validates, if an rstring contains an unsigned integer value in the given range and converts it, if possible.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__convertUint8ListToFloat64.list:.:uint8:.:.int32.float64">convertUint8ListToFloat64(list&lt;uint8&gt;, int32, float64)</a></strong>: This function converts a sequence of 4 or 8 uint8 values into a IEEE-754 floating point value and maps it to an SPL::Float64.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__convertUint8ListToUint64.list:.:uint8:.:.boolean.int32.boolean.uint64">convertUint8ListToUint64(list&lt;uint8&gt;, boolean, int32, boolean, uint64)</a></strong>: This function converts a sequence of up to 8 uint8 values into an uint64 integer value.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__getMatrixColumn.list:.:list:.:float64:.::.:.int32.list:.:list:.:float64:.::.:">getMatrixColumn(list&lt;list&lt;float64&gt;&gt;, int32, list&lt;list&lt;float64&gt;&gt;)</a></strong>: This function obtains a single column from a matrix A (unbounded two-dimensional array) and returns it as a new matrix in the mutable out parameter R.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__getMatrixDimension.list:.:list:.:float64:.::.:.int32.int32">getMatrixDimension(list&lt;list&lt;float64&gt;&gt;, int32, int32)</a></strong>: This function evaluates the dimension of a matrix A (unbounded two-dimensional array) and returns the number of rows and columns as mutable out parameters.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__getMatrixRow.list:.:list:.:float64:.::.:.int32.list:.:list:.:float64:.::.:">getMatrixRow(list&lt;list&lt;float64&gt;&gt;, int32, list&lt;list&lt;float64&gt;&gt;)</a></strong>: This function obtains a single row from a matrix A (unbounded two-dimensional array) and returns it as a new matrix in the mutable out parameter R.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__isMatrixDimensionValid.list:.:list:.:float64:.::.:.int32.int32">isMatrixDimensionValid(list&lt;list&lt;float64&gt;&gt;, int32, int32)</a></strong>: This function validates the dimension of a matrix A (unbounded two-dimensional array) against a given number of rows and columns.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__mapFromInt16ToFloat64.int16.int16.int16.list:.:int16:.:.float64.float64.float64">mapFromInt16ToFloat64(int16, int16, int16, list&lt;int16&gt;, float64, float64, float64)</a></strong>: This function maps/transforms an int16InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a platform roll angle (short) into decimal degrees between -50..+50. If the mapping fails, e.g. since int16InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__mapFromInt32ToFloat64.int32.int32.int32.list:.:int32:.:.float64.float64.float64">mapFromInt32ToFloat64(int32, int32, int32, list&lt;int32&gt;, float64, float64, float64)</a></strong>: This function maps/transforms an int32InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a lat or lon WGS84 coordinate into decimal degrees between -90..+90 or -180..+180 respectively. If the mapping fails, e.g. since int32InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__mapFromUint16ToFloat64.uint16.uint16.uint16.list:.:uint16:.:.float64.float64.float64">mapFromUint16ToFloat64(uint16, uint16, uint16, list&lt;uint16&gt;, float64, float64, float64)</a></strong>: This function maps/transforms an uint16InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a platform heading angle into decimal degrees between 0..+360. If the mapping fails, e.g. since uint16InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__mapFromUint32ToFloat64.uint32.uint32.uint32.list:.:uint32:.:.float64.float64.float64">mapFromUint32ToFloat64(uint32, uint32, uint32, list&lt;uint32&gt;, float64, float64, float64)</a></strong>: This function maps/transforms an uint32InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a sensor relative roll angle into decimal degrees between 0..+360. If the mapping fails, e.g. since uint32InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__multiplyMatrices.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:">multiplyMatrices(list&lt;list&lt;float64&gt;&gt;, list&lt;list&lt;float64&gt;&gt;, list&lt;list&lt;float64&gt;&gt;)</a></strong>: This function multiplies two matrices (unbounded two-dimensional arrays) and provides the result also as two-dimensional array.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__rstringListToUint8List.list:.:rstring:.:">rstringListToUint8List(list&lt;rstring&gt;)</a></strong>: This function converts a list of rstring values into a list of uint8 values If one or more of the rstring values cannot be converted to uint8 values, the complete list will be empty 
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__scalarProduct.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:.float64">scalarProduct(list&lt;list&lt;float64&gt;&gt;, list&lt;list&lt;float64&gt;&gt;, float64)</a></strong>: This function calculates the scalar product of two matrices (unbounded two-dimensional arrays) and provides the result also as float64 mutable out parameter.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__transposeMatrix.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:">transposeMatrix(list&lt;list&lt;float64&gt;&gt;, list&lt;list&lt;float64&gt;&gt;)</a></strong>: This function computes the transposed matrix of a matrix A (unbounded two-dimensional array) and returns it as a new matrix in the mutable out parameter AT.
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__uint64ToHexString.uint64">uint64ToHexString(uint64)</a></strong>: This function converts an unsigned integer value into a hexadecimal string representation It is a wrapper for the extended version of the same function, using default values for the various pretty printing options If pretty printing options are required to be set different, use the extended version directly 
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__uint64ToHexString.uint64.boolean.uint8.rstring.rstring">uint64ToHexString(uint64, boolean, uint8, rstring, rstring)</a></strong>: This function converts an unsigned integer value into a hexadecimal string representation various pretty printing parameters allow to format the output as desired fillToBytes will override fillNibble to true 
+</li>
+
+<li class="sli"><strong class="ph b"><a class="xref" href="spl$com.ibm.streamsx.math.common$MathFunctions.html#spldoc_compilationunit__function__uint8ListToHexString.list:.:uint8:.:.rstring">uint8ListToHexString(list&lt;uint8&gt;, rstring)</a></strong>: This function converts a list of unsigned integer values, i.e. a byte list, into a formatted hexadecimal string representation It is a wrapper for the extended version of the same function, using default values for the various pretty printing options If pretty printing options are required to be set different, use the extended version directly 
+</li>
+
+</ul>
+
+      </dd>
+
+    
+  </dl>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle splhead-1">Functions</h2>
+  
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__uint64ToHexString.uint64.boolean.uint8.rstring.rstring"><h2 class="title sectiontitle splpart">rstring uint64ToHexString(uint64 int, boolean fillNibble, uint8 fillToBytes, rstring prefix, rstring byteSeparator)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function converts an unsigned integer value into a hexadecimal string representation various pretty printing parameters allow to format the output as desired fillToBytes will override fillNibble to true 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">int</strong>: uint64 value to be converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">fillNibble</strong>: if true, insert a leading filler "0" in case the number of hex digits is odd
+   </li>
+
+   <li class="sli">
+<strong class="ph b">fillToBytes</strong>: if the number of hex bytes is less than fillToBytes, insert leading filler bytes "00" as needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">prefix</strong>: string prefix to precede the hex bytes (may be empty)
+   </li>
+
+   <li class="sli">
+<strong class="ph b">byteSeparator</strong>: string to be inserted between any two hex bytes (if more than one at all)
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+uint64ToHexString hexadecimal string representation of received unsigned integer value</li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__uint64ToHexString.uint64"><h2 class="title sectiontitle splpart">rstring uint64ToHexString(uint64 int)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function converts an unsigned integer value into a hexadecimal string representation It is a wrapper for the extended version of the same function, using default values for the various pretty printing options If pretty printing options are required to be set different, use the extended version directly 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">int</strong>: uint64 value to be converted
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+uint64ToHexString hexadecimal string representation of received unsigned integer value</li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__uint8ListToHexString.list:.:uint8:.:.rstring"><h2 class="title sectiontitle splpart">rstring uint8ListToHexString(list&lt;uint8&gt; byteList, rstring byteSeparator)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function converts a list of unsigned integer values, i.e. a byte list, into a formatted hexadecimal string representation It is a wrapper for the extended version of the same function, using default values for the various pretty printing options If pretty printing options are required to be set different, use the extended version directly 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">byteList</strong>: list&lt;uint8&gt; value to be converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">byteSeparator</strong>: the byte separator
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+uint8ListToHexString hexadecimal string representation of received unsigned integer value</li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__rstringListToUint8List.list:.:rstring:.:"><h2 class="title sectiontitle splpart">list&lt;uint8&gt; rstringListToUint8List(list&lt;rstring&gt; stringValues)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function converts a list of rstring values into a list of uint8 values If one or more of the rstring values cannot be converted to uint8 values, the complete list will be empty 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">stringValues</strong>: list of rstring values to be converted
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+rstringListToUint8List list of uint8 representation of received rstring values</li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__convertUint8ListToUint64.list:.:uint8:.:.boolean.int32.boolean.uint64"><h2 class="title sectiontitle splpart">boolean convertUint8ListToUint64(list&lt;uint8&gt; uint8InValues, boolean strictParsing, int32 length, boolean lsbIsRhs, uint64 uint64OutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function converts a sequence of up to 8 uint8 values into an uint64 integer value. If strictParsing is set to true, the sequence must be in a list with exactly eight uint8 values. If strictParsing is set to false, the list may contain more or less than 8 elements. In case it contains more than 8, a sequence of length elements from the beginning or from the end of the list will be used, depending on where the least significant byte can be found as specified by lsbIsRhs. If lsbIsRhs, the least significant byte will be the one with the highest index in the list, otherwise it will be the one with the lowest index, i.e. 0 In case the list contains less than eight elements, missing bytes will be filled up with 00 from the side representing the highest significant byte. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">uint8InValues</strong>: list containing the sequence of uint8 values to be converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">strictParsing</strong>: if set to true, the size of uint8InValues must be 8, exactly, and length will be ignored
+   </li>
+
+   <li class="sli">
+<strong class="ph b">length</strong>: if strictParsing is set to true, the length of the sequence of bytes may be specified between 1 and 8
+   </li>
+
+   <li class="sli">
+<strong class="ph b">lsbIsRhs</strong>: if set to true, the least significant byte is the one with the highest index in the list, otherwise the one with index 0
+   </li>
+
+   <li class="sli">
+<strong class="ph b">uint64OutValue</strong>: out parameter, containing an uint64 representation of the sequence of uint8 values received in uint8InValues
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and uint64OutValue is valid (false otherwise)</li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__convertUint8ListToFloat64.list:.:uint8:.:.int32.float64"><h2 class="title sectiontitle splpart">boolean convertUint8ListToFloat64(list&lt;uint8&gt; uint8InValues, int32 length, float64 float64OutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function converts a sequence of 4 or 8 uint8 values into a IEEE-754 floating point value and maps it to an SPL::Float64. If length does not match the size of uint8InValues and/or is different from 4 or 8, false will be returned and float64OutValue remains unchanged. If length is 4, the conversion will consider a type float as target, if length is 8, a type doulbe as target will be assumed. In both cases the output will be casted into a SPL::Float64 value at the end.  
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">uint8InValues</strong>: list containing the sequence of uint8 values to be converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">length</strong>: if set to 4, size of uint8InValues must be four bytes, if set to 8, size of uint8InValues must be eigth bytes 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">float64OutValue</strong>: out paramter, containing a IEEE-754 floating point representation (float or double) of the sequence of uint8 values received in uint8InValues
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and float64OutValue is valid (false otherwise)</li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__berOidToUint8List.list:.:uint8:.:.boolean.list:.:uint8:.:"><h2 class="title sectiontitle splpart">boolean berOidToUint8List(list&lt;uint8&gt; berOidInValues, boolean strictParsing, list&lt;uint8&gt; uint8OutValues)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function decodes a sequence of BER-OID encoded bytes and stores the decoded values into a list of uint8. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">berOidInValues</strong>: uint8 list containing the BER-OID encoded sequence of bytes to be converted 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">strictParsing</strong>: if set to true, berOidInValues[0] must not be 0x80 and the list must not be empty.   otherwise parsing will occur starting with berOidInValues[0], if present, and spare bytes will be ignored. 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">uint8OutValues</strong>: out paramter, containing a list of uint8 representation of the values received in berOidInValues 
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and uint8OutValues is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__mapFromInt32ToFloat64.int32.int32.int32.list:.:int32:.:.float64.float64.float64"><h2 class="title sectiontitle splpart">boolean mapFromInt32ToFloat64(int32 int32InValue, int32 MIN_I, int32 MAX_I, list&lt;int32&gt; ERROR_I, float64 MIN_F, float64 MAX_F, float64 float64OutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function maps/transforms an int32InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a lat or lon WGS84 coordinate into decimal degrees between -90..+90 or -180..+180 respectively. If the mapping fails, e.g. since int32InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified. Hint: if the input value has to be converted from a list of uint8 values into an int32 value first, use the native function common::uint8ListToInt32() 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">int32InValue</strong>: int32 value containing a value between MIN_I and MAX_I to be mapped
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_I</strong>: minimal value of the range of int32 values allowed for int32InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_I</strong>: maximal value of the range of int32 values allowed for int32InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">ERROR_I</strong>: list of optional values to be considered as invalid although formally in range 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_F</strong>: minimal value of the range of float64 values int32InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_F</strong>: maximal value of the range of float64 values int32InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">float64OutValue</strong>: mutable out value, the result of the mapping shall be stored in
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the mapping was successful and float64OutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__mapFromUint32ToFloat64.uint32.uint32.uint32.list:.:uint32:.:.float64.float64.float64"><h2 class="title sectiontitle splpart">boolean mapFromUint32ToFloat64(uint32 uint32InValue, uint32 MIN_I, uint32 MAX_I, list&lt;uint32&gt; ERROR_I, float64 MIN_F, float64 MAX_F, float64 float64OutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function maps/transforms an uint32InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a four byte sequence representing a sensor relative roll angle into decimal degrees between 0..+360. If the mapping fails, e.g. since uint32InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified. Hint: if the input value has to be converted from a list of uint8 values into an uint32 value first, use the native function common::uint8ListToUint32() 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">uint32InValue</strong>: uint32 value containing a value between MIN_I and MAX_I to be mapped
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_I</strong>: minimal value of the range of uint32 values allowed for uint32InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_I</strong>: maximal value of the range of uint32 values allowed for uint32InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">ERROR_I</strong>: list of optional values to be considered as invalid although formally in range 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_F</strong>: minimal value of the range of float64 values uint32InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_F</strong>: maximal value of the range of float64 values uint32InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">float64OutValue</strong>: mutable out value, the result of the mapping shall be stored in
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the mapping was successful and float64OutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__mapFromInt16ToFloat64.int16.int16.int16.list:.:int16:.:.float64.float64.float64"><h2 class="title sectiontitle splpart">boolean mapFromInt16ToFloat64(int16 int16InValue, int16 MIN_I, int16 MAX_I, list&lt;int16&gt; ERROR_I, float64 MIN_F, float64 MAX_F, float64 float64OutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function maps/transforms an int16InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a platform roll angle (short) into decimal degrees between -50..+50. If the mapping fails, e.g. since int16InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified. Hint: if the input value has to be converted from a list of uint8 values into an int16 value first, use the native function common::uint8ListToInt16() 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">int16InValue</strong>: int16 value containing a value between MIN_I and MAX_I to be mapped
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_I</strong>: minimal value of the range of int16 values allowed for int16InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_I</strong>: maximal value of the range of int16 values allowed for int16InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">ERROR_I</strong>: list of optional values to be considered as invalid although formally in range 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_F</strong>: minimal value of the range of float64 values int16InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_F</strong>: maximal value of the range of float64 values int16InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">float64OutValue</strong>: mutable out value, the result of the mapping shall be stored in
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the mapping was successful and float64OutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__mapFromUint16ToFloat64.uint16.uint16.uint16.list:.:uint16:.:.float64.float64.float64"><h2 class="title sectiontitle splpart">boolean mapFromUint16ToFloat64(uint16 uint16InValue, uint16 MIN_I, uint16 MAX_I, list&lt;uint16&gt; ERROR_I, float64 MIN_F, float64 MAX_F, float64 float64OutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function maps/transforms an uint16InValue out of a range between MIN_I and MAX_I to a float64 value into a range of MIN_F and MAX_F (to be used e.g. to map a two byte sequence representing a platform heading angle into decimal degrees between 0..+360. If the mapping fails, e.g. since uint16InValue is out of range or contained in ERROR_I, the return value will be false and the content of the mutable out param float64OutValue will be kept unmodified. Hint: if the input value has to be converted from a list of uint8 values into an uint16 value first, use the native function common::uint8ListToUint16() 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">uint16InValue</strong>: uint16 value containing a value between MIN_I and MAX_I to be mapped
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_I</strong>: minimal value of the range of uint16 values allowed for uint16InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_I</strong>: maximal value of the range of uint16 values allowed for uint16InValue 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">ERROR_I</strong>: list of optional values to be considered as invalid although formally in range 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MIN_F</strong>: minimal value of the range of float64 values uint16InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">MAX_F</strong>: maximal value of the range of float64 values uint16InValue shall be mapped into 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">float64OutValue</strong>: mutable out value, the result of the mapping shall be stored in
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the mapping was successful and float64OutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__isMatrixDimensionValid.list:.:list:.:float64:.::.:.int32.int32"><h2 class="title sectiontitle splpart">boolean isMatrixDimensionValid(list&lt;list&lt;float64&gt;&gt; A, int32 r, int32 c)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function validates the dimension of a matrix A (unbounded two-dimensional array) against a given number of rows and columns. The first index of the matrix always refers to rows, whereas the second index points to columns. The number of rows must match the given value and the numbers of columns must match the given value for each row. On purpose, we do not use an unsigned number format for r and c, since a int32 number can be used as index in the array directly without the need to cast. Anyway, we need to verify the valid range (greater than zero) to be handed over for r and c. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">A</strong>: list&lt;list&lt;float64&gt;&gt; containing the matrix to validate the dimension of 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">r</strong>: int32 containing the expected number of row, must be greater than zero
+   </li>
+
+   <li class="sli">
+<strong class="ph b">c</strong>: int32 containing the expected number of columns per row, must be greater than zero
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the dimension of the matrix A matches the expected number of rows and columns (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__multiplyMatrices.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:"><h2 class="title sectiontitle splpart">boolean multiplyMatrices(list&lt;list&lt;float64&gt;&gt; A, list&lt;list&lt;float64&gt;&gt; B, list&lt;list&lt;float64&gt;&gt; C)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function multiplies two matrices (unbounded two-dimensional arrays) and provides the result also as two-dimensional array. The first index always refers to rows, whereas the second index points to columns. The number of rows and columns of the given factor matrices will be evaluated automatically and the results matrix will contain the appropriate number of rows and columns according to the multiplication operation, but of course, the number of columns of the first factor matrix must match the number of rows of the second factor matrix. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">A</strong>: list&lt;list&lt;float64&gt;&gt; containing the first factor matrix
+   </li>
+
+   <li class="sli">
+<strong class="ph b">B</strong>: list&lt;list&lt;float64&gt;&gt; containing the second factor matrix
+   </li>
+
+   <li class="sli">
+<strong class="ph b">C</strong>: mutable list&lt;list&lt;float64&gt;&gt; containing the product matrix of A * B
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the matrix multiplication was successful and C is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__scalarProduct.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:.float64"><h2 class="title sectiontitle splpart">boolean scalarProduct(list&lt;list&lt;float64&gt;&gt; A, list&lt;list&lt;float64&gt;&gt; B, float64 s)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function calculates the scalar product of two matrices (unbounded two-dimensional arrays) and provides the result also as float64 mutable out parameter. Within the matrix representations, the first index always refers to rows, whereas the second index points to columns. The number of rows and columns of the given factor matrices will be evaluated automatically and the first element of the first matrix will be multiplied with the first element of the second matrix and the respective products of the consecutive elements of the matrices will be added thereafter in incrementing element's oder, one by one. Although each of the both matrices must only have one column or one row for one of their dimensions, and the number of elements in the other dimension (column or row) must be identical for both of the two matrices, it does not matter, which dimension holds multiple elements (in rows or columns) and it does not need to be the same one for both of the two matrices. If the conditions above are not met, the mutable out parameter will not be changed and the return value of the function will be false.    
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">A</strong>: list&lt;list&lt;float64&gt;&gt; containing the first factor matrix
+   </li>
+
+   <li class="sli">
+<strong class="ph b">B</strong>: list&lt;list&lt;float64&gt;&gt; containing the second factor matrix
+   </li>
+
+   <li class="sli">
+<strong class="ph b">s</strong>: mutable float64 scalar value, containing the scalar product of A ° B, A' ° B, A ° B' or A' ° B' depending of the dimensions of A and B.
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the scalar product of A and B could be calculated successfully and C is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__getMatrixDimension.list:.:list:.:float64:.::.:.int32.int32"><h2 class="title sectiontitle splpart">boolean getMatrixDimension(list&lt;list&lt;float64&gt;&gt; A, int32 r, int32 c)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function evaluates the dimension of a matrix A (unbounded two-dimensional array) and returns the number of rows and columns as mutable out parameters. The first index of the matrix always refers to rows, whereas the second index points to columns. The number of columns must be identical for each row or the matrix will be considered as invalid and the function will return false. An empty matrix, containing no rows at all or at least one row, but no columns will also be considered as invalid. Attention: the mutable out parameters r and c will not be changed in case of invalid matrix. Thus, we will never return r=0 or c=0, but keep previous values untouched. On purpose, we do not use an unsigned number format for r and c, since a int32 number can be used as index in the array directly without the need to cast. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">A</strong>: list&lt;list&lt;float64&gt;&gt; containing the matrix to evaluate the dimension of 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">r</strong>: mutable int32 will be filled with the number of rows in case of a valid matrix
+   </li>
+
+   <li class="sli">
+<strong class="ph b">c</strong>: mutable int32 will be filled with the number of columns in case of a valid matrix
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the matrix is valid, i.e. contains the same number of columns in each row   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__getMatrixRow.list:.:list:.:float64:.::.:.int32.list:.:list:.:float64:.::.:"><h2 class="title sectiontitle splpart">boolean getMatrixRow(list&lt;list&lt;float64&gt;&gt; A, int32 r, list&lt;list&lt;float64&gt;&gt; R)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function obtains a single row from a matrix A (unbounded two-dimensional array) and returns it as a new matrix in the mutable out parameter R. The first index of the matrix always refers to rows, whereas the second index points to columns. Matrix A must be valid, i.e. at least one row must exist and contain at least one column. The number of columns must be identical for each row or the matrix will be considered as invalid and the function will return false. An empty matrix, containing no rows at all or at least one row, but no columns will also be considered as invalid. On purpose, we do not use an unsigned number format for r and c, since a int32 number can be used as index in the array directly without the need to cast. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">A</strong>: list&lt;list&lt;float64&gt;&gt; containing the matrix to obtain a row from 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">r</strong>: int32 the index of the row to obtain from matrix A
+   </li>
+
+   <li class="sli">
+<strong class="ph b">R</strong>: mutable list&lt;list&lt;float64&gt;&gt;, a new matrix containing only the one row, obtained from A
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the row with index r could be obtained from A and R is valid   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__getMatrixColumn.list:.:list:.:float64:.::.:.int32.list:.:list:.:float64:.::.:"><h2 class="title sectiontitle splpart">boolean getMatrixColumn(list&lt;list&lt;float64&gt;&gt; A, int32 c, list&lt;list&lt;float64&gt;&gt; C)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function obtains a single column from a matrix A (unbounded two-dimensional array) and returns it as a new matrix in the mutable out parameter R. The first index of the matrix always refers to rows, whereas the second index points to columns. Matrix A must be valid, i.e. at least one row must exist and contain at least one column. The number of columns must be identical for each row or the matrix will be considered as invalid and the function will return false. An empty matrix, containing no rows at all or at least one row, but no columns will also be considered as invalid. On purpose, we do not use an unsigned number format for r and c, since a int32 number can be used as index in the array directly without the need to cast. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">A</strong>: list&lt;list&lt;float64&gt;&gt; containing the matrix to obtain a column from 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">c</strong>: int32 the index of the column to obtain from matrix A
+   </li>
+
+   <li class="sli">
+<strong class="ph b">C</strong>: mutable list&lt;list&lt;float64&gt;&gt;, a new matrix containing only the one column, obtained from A
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the column with index c could be obtained from A and C is valid   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__transposeMatrix.list:.:list:.:float64:.::.:.list:.:list:.:float64:.::.:"><h2 class="title sectiontitle splpart">boolean transposeMatrix(list&lt;list&lt;float64&gt;&gt; A, list&lt;list&lt;float64&gt;&gt; AT)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">This function computes the transposed matrix of a matrix A (unbounded two-dimensional array) and returns it as a new matrix in the mutable out parameter AT. The first index of the matrix always refers to rows, whereas the second index points to columns. Matrix A must be valid, i.e. at least one row must exist and contain at least one column. The number of columns must be identical for each row or the matrix will be considered as invalid and the function will return false. An empty matrix, containing no rows at all or at least one row, but no columns will also be considered as invalid. On purpose, we do not use an unsigned number format for r and c, since a int32 number can be used as index in the array directly without the need to cast. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">A</strong>: list&lt;list&lt;float64&gt;&gt; containing the matrix to be transposed 
+   </li>
+
+   <li class="sli">
+<strong class="ph b">AT</strong>: mutable list&lt;list&lt;float64&gt;&gt;, a new matrix containing the transposed matrix of A
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if matrix A could be transposed and TA is valid   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__convertToBoolean.rstring.boolean.boolean.boolean.boolean"><h2 class="title sectiontitle splpart">boolean convertToBoolean(rstring booleanInString, boolean strictParsing, boolean allowEmpty, boolean default, boolean booleanOutValue)</h2>
+  
+</div>
+<div class="section">
+
+<div class="p">Validates, if an rstring contains a boolean value and converts it, if possible. The rstring will be trimmed before evaluation and the following values will be accepted: true:
+<pre class="pre codeblock">
+1
+true
+TRUE
+True
+t
+T
+</pre>
+
+false:
+<pre class="pre codeblock">
+0
+false
+FALSE
+False
+f
+F
+</pre>
+
+If allowEmpty is true, the value default will be mapped into the booleanOutValue, if the booleanInString is empty. 
+</div>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">booleanInString</strong>: the rstring to be validated and converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">strictParsing</strong>: if set to true, no leading or trailing space- and tab-characters must be present and the input case must exactly match one of the acceptable strings
+   </li>
+
+   <li class="sli">
+<strong class="ph b">allowEmpty</strong>: specifies, if booleanInString may be empty - in this case default will be the result of the conversion
+   </li>
+
+   <li class="sli">
+<strong class="ph b">default</strong>: specifies the value to return for booleanOutValue, if allowEmpty is true and booleanInString is empty (will be ignored otherwise)
+   </li>
+
+   <li class="sli">
+<strong class="ph b">booleanOutValue</strong>: out parameter containing the boolean representation of the boolean value contained in booleanInString
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and booleanOutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__convertToFloat64.rstring.boolean.boolean.float64.float64.float64.float64"><h2 class="title sectiontitle splpart">boolean convertToFloat64(rstring floatInString, boolean strictParsing, boolean allowEmpty, float64 default, float64 min, float64 max, float64 floatOutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">Validates, if an rstring contains a float value in the given range and converts it, if possible. If allowEmpty is true, the value default will be mapped into the floatOutValue, if the floatInString is empty. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">floatInString</strong>: the rstring to be validated and converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">strictParsing</strong>: if set to true, no trailing invalid characters must be present, even if the string begins with a valid number
+   </li>
+
+   <li class="sli">
+<strong class="ph b">allowEmpty</strong>: specifies, if floatInString may be empty - in this case default will be the result of the conversion
+   </li>
+
+   <li class="sli">
+<strong class="ph b">default</strong>: specifies the value to return for floatOutValue, if allowEmpty is true and floatInString is empty (will be ignored otherwise)
+   </li>
+
+   <li class="sli">
+<strong class="ph b">min</strong>: minimum value allowed for floatOutValue - set to float64 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">max</strong>: maximum value allowed for floatOutValue - set to float64 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">floatOutValue</strong>: out parameter containing the float representation of the numeric value contained in floatInString
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and floatOutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__convertToInt64.rstring.boolean.boolean.int64.int64.int64.int64"><h2 class="title sectiontitle splpart">boolean convertToInt64(rstring intInString, boolean strictParsing, boolean allowEmpty, int64 default, int64 min, int64 max, int64 intOutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">Validates, if an rstring contains an integer value in the given range and converts it, if possible. If allowEmpty is true, the value default will be mapped into the intOutValue, if the intInString is empty. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">intInString</strong>: the rstring to be validated and converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">strictParsing</strong>: if set to true, no trailing invalid characters must be present, even if the string begins with a valid number
+   </li>
+
+   <li class="sli">
+<strong class="ph b">allowEmpty</strong>: specifies, if intInString may be empty - in this case default will be the result of the conversion
+   </li>
+
+   <li class="sli">
+<strong class="ph b">default</strong>: specifies the value to return for intOutValue, if allowEmpty is true and intInString is empty (will be ignored otherwise)
+   </li>
+
+   <li class="sli">
+<strong class="ph b">min</strong>: minimum value allowed for intOutValue - set to int64 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">max</strong>: maximum value allowed for intOutValue - set to int64 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">intOutValue</strong>: out parameter containing the integer representation of the numeric value contained in intInString
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and intOutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__convertToUint32.rstring.boolean.boolean.uint32.uint32.uint32.uint32"><h2 class="title sectiontitle splpart">boolean convertToUint32(rstring intInString, boolean strictParsing, boolean allowEmpty, uint32 default, uint32 min, uint32 max, uint32 intOutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">Validates, if an rstring contains an unsigned integer value in the given range and converts it, if possible. If allowEmpty is true, the value default will be mapped into the intOutValue, if the intInString is empty. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">intInString</strong>: the rstring to be validated and converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">strictParsing</strong>: if set to true, no trailing invalid characters must be present, even if the string begins with a valid number
+   </li>
+
+   <li class="sli">
+<strong class="ph b">allowEmpty</strong>: specifies, if intInString may be empty - in this case default will be the result of the conversion
+   </li>
+
+   <li class="sli">
+<strong class="ph b">default</strong>: specifies the value to return for intOutValue, if allowEmpty is true and intInString is empty (will be ignored otherwise)
+   </li>
+
+   <li class="sli">
+<strong class="ph b">min</strong>: minimum value allowed for intOutValue - set to uint32 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">max</strong>: maximum value allowed for intOutValue - set to uint32 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">intOutValue</strong>: out parameter containing the integer representation of the numeric value contained in intInString
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and intOutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+<div class="section" id="spldoc_compilationunit__function__convertToUint8.rstring.boolean.boolean.uint8.uint8.uint8.uint8"><h2 class="title sectiontitle splpart">boolean convertToUint8(rstring intInString, boolean strictParsing, boolean allowEmpty, uint8 default, uint8 min, uint8 max, uint8 intOutValue)</h2>
+  
+</div>
+<div class="section">
+
+<p class="p">Validates, if an rstring contains an unsigned integer value in the given range and converts it, if possible. If allowEmpty is true, the value default will be mapped into the intOutValue, if the intInString is empty. 
+</p>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Parameters</h2>
+
+ <ul class="sl simple">
+   <li class="sli">
+<strong class="ph b">intInString</strong>: the rstring to be validated and converted
+   </li>
+
+   <li class="sli">
+<strong class="ph b">strictParsing</strong>: if set to true, no trailing invalid characters must be present, even if the string begins with a valid number
+   </li>
+
+   <li class="sli">
+<strong class="ph b">allowEmpty</strong>: specifies, if intInString may be empty - in this case default will be the result of the conversion
+   </li>
+
+   <li class="sli">
+<strong class="ph b">default</strong>: specifies the value to return for intOutValue, if allowEmpty is true and intInString is empty (will be ignored otherwise)
+   </li>
+
+   <li class="sli">
+<strong class="ph b">min</strong>: minimum value allowed for intOutValue - set to uint8 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">max</strong>: maximum value allowed for intOutValue - set to uint8 boundaries, if no further restriction is needed
+   </li>
+
+   <li class="sli">
+<strong class="ph b">intOutValue</strong>: out parameter containing the integer representation of the numeric value contained in intInString
+   </li>
+
+ </ul>
+
+</div>
+
+<div class="section"><h2 class="title sectiontitle">Returns</h2>
+
+<ul class="sl simple"><li class="sli">
+true, if the conversion was successful and intOutValue is valid (false otherwise)   </li>
+</ul>
+
+</div>
+
+</div>
+
+
+</body>
+</html>

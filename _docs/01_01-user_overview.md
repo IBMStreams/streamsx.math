@@ -15,7 +15,7 @@ sidebar:
 ### streamsx.math
 
 
-[SPLDoc for the com.ibm.streamsx.math toolkit](https://ibmstreams.github.io/streamsx.math/spldoc/html/index.html)
+[SPLDoc for the com.ibm.streamsx.math toolkit](https://ibmstreams.github.io/streamsx.math/doc/spldoc/html/index.html)
 
 
 
