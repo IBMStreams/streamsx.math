@@ -230,13 +230,21 @@
 		<antcall target="spldoc-samples"/>
 		<antcall target="samples-clean"/>
 		<mkdir dir="${release.dir}"/>
+		<!-- get os type string -->
+		<property name="osVersion" value="${os.version}"/>
+		<condition property="osPlat" value="el7">
+			<contains string="${osVersion}" substring="el7" casesensitive="false"/>
+		</condition>
+		<condition property="osPlat" value="el6">
+			<contains string="${osVersion}" substring="el6" casesensitive="false"/>
+		</condition>
 		<!-- Extract the short git commit hash -->
 		<exec executable="git" outputproperty="commithash">
 			<arg value="rev-parse" />
 			<arg value="--short" />
 			<arg value="HEAD" />
 		</exec>
-		<property name="releasefilename" value="${release.dir}/${ant.project.name}-${toolkit.version}-${commithash}-${DSTAMP}-${TSTAMP}.tgz"/>
+		<property name="releasefilename" value="${release.dir}/${ant.project.name}-${toolkit.version}-${osPlat}-${os.arch}-${commithash}-${DSTAMP}-${TSTAMP}.tgz"/>
 		<echo message="Make releasefile Toolkit Version: ${toolkit.version} ${commithash} : ${releasefilename}"/>
 		<!-- must use the tar command because the tar target handles symbolic links incorrect -->
 		<exec executable="tar" failonerror="true">
