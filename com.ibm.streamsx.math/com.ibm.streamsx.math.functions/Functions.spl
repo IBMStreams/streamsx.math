@@ -15,22 +15,21 @@ public list<float64> logList(list<float64> x){
 }
 
 /**
- * Compute the euclidian distance of list elements
+ * Compute the (one-dimensional) distance of list elements. The distance is computed with (abs(list2\[i\]-list1\[i\])). 
+ * The size of the result is the minimum of the size of input lists. (min(size(list1), size(list1)))
  * 
  * @param list1 input value list 1
  * @param list2 input value list 2
- * @return A list that contains the euclidian distance between input values : (abs(list2\[i\]-list1\[i\]))
+ * @return A list that contains the distance between input values
  */
-public list<float64> euclidianDistance(list<float64> list1,list<float64> list2){
+public list<float64> distanceList(list<float64> list1,list<float64> list2){
 	mutable list<float64> result=[];
 	int32 sz=size(list1)>=size(list2)?size(list2):size(list1);
 	mutable int32 index=0;
 	mutable float64 val;
 	while(index < sz){
 		val=abs(list2[index]-list1[index]);
-		if(!isNaN(val)){
-			appendM(result,val);
-		}
+		appendM(result,val);
 		index++;
 	}
 	return result;
