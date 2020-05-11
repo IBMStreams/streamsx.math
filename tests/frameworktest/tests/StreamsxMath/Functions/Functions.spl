@@ -1,0 +1,31 @@
+public composite Functions {
+	graph
+		() as Performer = Custom() {
+			logic
+				onProcess: {
+					//<log>list<float64> x = [1.0, 100.0];
+					//<log>list<float64> expec = [0.0, log(100.0)];
+					//<log>list<float64> y = com.ibm.streamsx.math.functions::logList(x);
+					//<dist>list<float64> x = [1.0, 2.0];
+					//<dist>list<float64> l2 = [1.0, 1.0];
+					//<dist>list<float64> expec = [0.0, 1.0];
+					//<dist>list<float64> y = com.ibm.streamsx.math.functions::distanceList(x, l2);
+					
+					//<log>rstring func = "logList";
+					//<dist>rstring func = "distanceList";
+					printStringLn(func + "(" + (rstring)x + ")=" +(rstring)y);
+					printStringLn("expec=" + (rstring)expec);
+					
+					mutable int32 i = 0;
+					while (i < size(x)) {
+						float64 diff = expec[i] - y[i];
+						printStringLn("diff=" + (rstring)diff);
+						if (abs(diff) > 0.00001l) abort();
+						++i;
+					}
+					printStringLn("End of sample");
+				}
+		}
+
+	config restartable: false;
+}
