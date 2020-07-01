@@ -1,4 +1,7 @@
 # Changes
+## v1.0.2
+* Corrections in build.xml file
+
 ## v1.0.1
 * Initial release contains:
 * namespace com.ibm.streamsx.math.functions: logList, distanceList
